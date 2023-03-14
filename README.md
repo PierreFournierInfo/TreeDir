@@ -2,5 +2,5 @@
 
 Projet de Programmation Langage C 
 
-# ON VA GERER 
-Pour l'instant pas plus d'information ....
+# Lien Interessant pour faire un makeFile
+https://www.youtube.com/watch?v=-riHEHGP2DU
