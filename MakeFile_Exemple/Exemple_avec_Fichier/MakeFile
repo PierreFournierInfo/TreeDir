@@ -1,3 +1,9 @@
+RM= rm -f
+# Si le système est Windows, utilisez "del" pour supprimer les fichiers
+ifeq ($(OS),Windows_NT)
+    RM = del /q
+endif
+
 prog : main.o player.o
 	gcc -o prog main.o player.o
 
@@ -6,3 +12,6 @@ main.o : main.c
 
 player.o : player.c
 	gcc -o player.o -c player.c -Wall
+
+clean :
+	$(RM) main.o player.o
