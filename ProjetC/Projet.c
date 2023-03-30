@@ -1163,6 +1163,7 @@ void mv(noeud* n,char* chem1,char* chem2){
 }
 
 int main(){
+    char** commande={"mkdir","touch"};
     //Test Formation correct ou non
     /*
     char* test1="/t/ QJSQKLH/QSKH/JHSK"; // Faux
