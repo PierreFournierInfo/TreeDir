@@ -1,0 +1,10 @@
+RM= rm -f
+
+execute : Projet.o 
+	gcc -o execute Projet.o 
+
+Projet.o : Projet.c
+	gcc -o Projet.o -c Projet.c -Wall
+
+clean :
+	$(RM) Projet.o 

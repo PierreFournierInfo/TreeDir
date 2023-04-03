@@ -1,10 +1,20 @@
-RM= rm -f
+CC = gcc
+CFLAGS = -Wall
+#-Wextra -Werror
 
-execute : Projet.o 
-	gcc -o execute Projet.o 
+SRC_FILES = $(wildcard *.c)
+OBJ_FILES = $(SRC_FILES:.c=.o)
+HDR=$(wildcard *.h)
+PROG = program
 
-Projet.o : Projet.c
-	gcc -o Projet.o -c Projet.c -Wall
+all: $(PROG)
 
-clean :
-	$(RM) Projet.o 
+%.o: %.c $(HDR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(PROG): $(OBJ_FILES)
+	$(CC) $(CFLAGS) -o $@ $^
+
+clean:
+	rm -rf $(PROGR) $(OBJ_FILES) 
+ 
