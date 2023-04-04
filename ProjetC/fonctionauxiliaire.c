@@ -41,51 +41,55 @@ void descriptionNoeud(noeud* d){
 
 
 //Fonction auxiliaire ajout dans une liste
-void ajoutL(noeud* courant,liste_noeud* l, noeud* n){
+noeud* ajoutL(noeud* courant, noeud* n){
     assert(courant!=NULL);
     assert(n!=NULL);
-    //assert(l!=NULL);
-    if(courant != NULL && l!=NULL && n != NULL ){
-        printf("1 Ajout Liste \n");
-        if(l->succ==NULL){
+    if(courant != NULL && courant->fils !=NULL && n != NULL ){
+        printf(" Ajout Liste \n");
+        if(courant->fils->succ==NULL){
             // Si le suivant est directement NULL
             liste_noeud* aj=malloc(sizeof(liste_noeud));
             assert(aj!=NULL);
             aj->no=n;
             aj->succ=NULL;
-            l->succ=aj;
+            courant->fils->succ=aj;
+            return courant;
         }
         else{
             // Si on doit faire un parcour des fils
-            liste_noeud* tmp=l->succ;
+            liste_noeud* tmp = courant->fils;
             while(tmp->succ != NULL){
-                tmp->succ=tmp->succ;
+                tmp=tmp->succ;
             }
             liste_noeud* aj=malloc(sizeof(liste_noeud));
             assert(aj!=NULL);
-            aj->no=n; aj->succ=NULL;
+            aj->no=n; 
+            aj->succ=NULL;
             tmp->succ=aj;    
+            return courant;
         }
     }
     else{ 
         // Creation des fils de la liste
-        printf("Ajout Liste 2 \n");
+        printf("\n \033[33m Ajout Liste 2 \033[0m\n");
         if(n != NULL){
-            if(courant->fils==l){
-                printf("==>Reussi l'ajout \n");
-                l=malloc(sizeof(liste_noeud));
-                l->no=n;
-                l->succ=NULL;
+            if(courant->fils==NULL){
+                printf(" ==>Reussi l'ajout \n");
+                courant->fils=malloc(sizeof(liste_noeud));
+                courant->fils->no = n;
+                courant->fils->succ=NULL;
             }
+            return courant;
         }
         else{
             printf(" Le noeud à ajouter dans la liste courante est null !! ");
+            exit(EXIT_FAILURE);
         }
     }
 }
 
 // CD
-//Faire une fonction auxiliaire pour le deplacement dans un fichier
+//!Faire une fonction auxiliaire pour le deplacement dans un fichier
 noeud* depCD(noeud* n, char* name){
     printf("\n");
     if(*name == '/'){
@@ -223,7 +227,6 @@ int nbFils(noeud* n){
     }
     return x;
 }
-
 
 // RM 
 //Fonction auxiliaire pour faire un deplacement même dans un noeud
@@ -383,34 +386,32 @@ bool chemin_existe(noeud* n,char* chem){
     // Parcour d'un chemin absolu
     if(*chem=='/'){ // verifier tous les fils que notre noeud courant n'est pas dans le chemin
         w_index* index=cons_index(chem);
+        bool entre=false;
         assert(index!=NULL);
         liste_noeud* parc=n->racine->fils;
         
         print_index(index);
-        for(int i=1;i<index->nbr;++i){
+        for(int i=0;i<index->nbr;++i){
             assert(parc!=NULL);
             while(parc->succ!=NULL){
-                if(parc->no->est_dossier==true){
                     if(strcmp(parc->no->nom,index->words[i])==0){
-                        if((i+1)>=index->nbr){
-                            break;
-                        }
-                        else{
-                            parc=parc->no->fils;
-                            break;
-                        }
+                        parc=parc->no->fils;
+                        entre=true;
+                        break;
                     }
-                }
+                printf("Parcour : %s \n", parc->no->nom);
                 parc=parc->succ;
             }
-            if(strcmp(parc->no->nom,index->words[i])==0){
-                parc=parc->no->fils;
-            }
-            else{
-                printf("l 402 - Chemin_existe / : Il y a un problème dans le déplacement du chemin \n");
-                printf(" %s : parc->no->nom \n",parc->no->nom);
-                printf("%s : index->words[i] \n",index->words[i]);
-                return false;
+            if(!entre){
+                if(strcmp(parc->no->nom,index->words[i])==0){
+                    parc = parc->no->fils;
+                }
+                else{
+                    printf("l 402 - Chemin_existe / : Il y a un problème dans le déplacement du chemin \n");
+                    printf(" %s : parc->no->nom \n",parc->no->nom);
+                    printf("%s : index->words[i] \n",index->words[i]);
+                    return false;
+                }
             }
         }
         free_index(index);
@@ -419,31 +420,30 @@ bool chemin_existe(noeud* n,char* chem){
         w_index* index=cons_index(chem);
         assert(index!=NULL);
         liste_noeud* parc=n->fils;
-        
+        bool entre=false;
+        print_index(index);
         for(int i=0;i<index->nbr;++i){
             assert(parc!=NULL);
             while(parc->succ!=NULL){
-                if(parc->no->est_dossier==true){
                     if(strcmp(parc->no->nom,index->words[i])==0){
-                        if((i+1)>=index->nbr){
-                            break;
-                        }
-                        else{
+                            printf("Find \n");
                             parc=parc->no->fils;
+                            entre=true;
                             break;
-                        }
                     }
-                }
+                printf("Parcour : %s \n", parc->no->nom);
                 parc=parc->succ;
             }
-            if(strcmp(parc->no->nom,index->words[i])==0){
-                parc=parc->no->fils;
-            }
-            else{
-                printf("l 430 Chemin_existe : Il y a un problème dans le déplacement du chemin \n");
-                printf(" %s \n",parc->no->nom);
-                printf(" %s \n",index->words[i]);
-                return false;
+            if(!entre){
+                if(strcmp(parc->no->nom,index->words[i])==0){
+                    parc=parc->no->fils;
+                }
+                else{
+                    printf("l 451 Chemin_existe : Il y a un problème dans le déplacement du chemin \n");
+                    printf(" %s \n",parc->no->nom);
+                    printf(" %s \n",index->words[i]);
+                    return false;
+                }
             }
         }
         free_index(index);
@@ -465,17 +465,17 @@ void suppression(noeud* pred,noeud* n){
         }
         if(courant->no==n){
             precedent->succ=suivant;
-            // free(courant);
+            free(courant);
         }
     }
 
     if(n!=NULL){
         if(n->fils == NULL){
-            printf("l 460 : suppression : un seul élément \n");
+            printf("l 474 : suppression : un seul élément \n");
             free(n);
         } 
         else{
-            printf("l 464 : suppression: plusieurs élément \n");
+            printf("l 478 : suppression: plusieurs élément \n");
             liste_noeud* list=n->fils;
             while(list != NULL){
                 liste_noeud* tmp1 = list->succ;
@@ -487,16 +487,16 @@ void suppression(noeud* pred,noeud* n){
     }
 }
 
-//Fonction auxiliaire pour supprimer tous les fils du noeud et le noeud lui meme
+// Fonction auxiliaire pour supprimer tous les fils du noeud et le noeud lui meme
 void liberation_noeud(noeud* n,char* chem){
    assert(n!=NULL);
    assert(chem!=NULL);
-   
+   bool entre=false;
    w_index* index_Chem=cons_index(chem);
    //print_index(index_Chem);
    if(*chem=='/'){
     printf("l 498 : liberation_noeud: racine \n");
-    
+    bool entre=false;
     noeud* pred=NULL;
     noeud* parc=n->racine;
     
@@ -512,23 +512,27 @@ void liberation_noeud(noeud* n,char* chem){
                 parc=list->no;
                 li_Pred=list;
                 list=parc->fils;
+                entre=true;
                 break; 
             }
             li_Pred=list;
             list=list->succ;
         }
         //Le dernier élément non null
-        if(strcmp(list->no->nom,index_Chem->words[i])==0){
+        if(!entre){
+            if(strcmp(list->no->nom,index_Chem->words[i])==0){
             pred=parc;
             parc=list->no;
 
             li_Pred=list;
             list=parc->fils;
+            }
+            else{
+                printf("l 515 : Liberation noeud (if->else): il y a une erreur \n");
+                exit(1);
+            }
         }
-        else{
-            printf("l 515 : Liberation noeud (if->else): il y a une erreur \n");
-            exit(1);
-        }
+        entre=false;
     }
 
     printf("\n l 520 : Libération noeud : description du noeud à supprimer \n");
@@ -548,29 +552,33 @@ void liberation_noeud(noeud* n,char* chem){
     liste_noeud* li_Pred=NULL;
     liste_noeud* list=parc->fils;
      for(int i=0;i<index_Chem->nbr;++i){
-        while(list->succ != NULL){
+        while(list->succ != NULL && validiteNoeud(list->no)){
             if(strcmp(index_Chem->words[i],list->no->nom)==0){
                 pred=parc;
                 parc=list->no;
                 li_Pred=list;
                 list=parc->fils;
+                entre=true;
                 break; 
             }
-             li_Pred=list;
+            li_Pred=list;
             list=list->succ;
         }
         //Le dernier élément non null
-        if(strcmp(list->no->nom,index_Chem->words[i])==0){
+        if(!entre){
+            if(strcmp(list->no->nom,index_Chem->words[i])==0){
             pred=parc;
             parc=list->no;
 
             li_Pred=list;
             list=parc->fils;
+            }
+            else{
+                printf("l 557 : Liberation noeud (else->else): il y a une erreur \n");
+                exit(1);
+            }
         }
-        else{
-            printf("l 557 : Liberation noeud (else->else): il y a une erreur \n");
-            exit(1);
-        }
+        entre=false;
     }
 
      printf("l 562 : Libération noeud : description du noeud à supprimer \n");
@@ -585,35 +593,35 @@ void liberation_noeud(noeud* n,char* chem){
 }
 
 // CP
-//Fonction auxiliaire de verification pour le chemin de cp
+// Fonction auxiliaire de verification pour le chemin de cp
 // Faire un deplacement afin de sauvegarder la copie à faire
 noeud* cpVerif1(noeud* n,char*chem){
-    printf("l 577 cp Verif1 %s \n ",chem);
+    printf("l 595 cp Verif1 %s \n ",chem);
     if(verif(chem)==true){
         if(strcmp(chem,"")==0 || strcmp(chem,"..")==0){
-            printf("l 580 - cpVerif1 : Le premier chemin de copie est incorrect");
+            printf("l 598 - cpVerif1 : Le premier chemin de copie est incorrect");
             exit(1);
         }
         else{
             noeud* dep=deplacementCalculer(n,chem);
-            printf(" ==> l 585 - Description du Noeud dans cpVeriff1 \n");
+            printf(" ==> l 607 - Description du Noeud dans cpVeriff1 \n");
             assert(dep!=NULL);
             //print(dep);
             return dep;
         }
     }
     else{
-        printf(" ==> l 592 - cpVerif1: il y a une erreur dans laformation du chemin \n");
+        printf(" ==> l 614 - cpVerif1: il y a une erreur dans laformation du chemin \n");
         exit(1);
     }
 }
 
-//Fonction auxliaire pour s'arreter avant le dernier mot
+//! Fonction auxliaire pour s'arreter avant le dernier mot
 noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
     assert(n!=NULL);
     assert(chem!=NULL);
     if(verif(chem)==false || strcmp(chem,"")==0 || strcmp(chem,"..")==0){
-        printf("l 602 - deplacementCalculer : le chemin est faux \n");
+        printf("l 620 - deplacementCalculer : le chemin est faux \n");
         exit(1);
     }
     if(*chem =='/'){
@@ -643,7 +651,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
                         }
                     }
                     else{
-                        printf("l 632 - deplacementCalculer : Il y a un problème dans le déplacement \n");
+                        printf("l 650 - deplacementCalculer : Il y a un problème dans le déplacement \n");
                         exit(1);
                     }
             }
@@ -698,71 +706,100 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
     }
 }
 
-//Fonction auxiliaire pour faire un deplacement avec la creation pour la copie
+// Fonction pour copier un pointeur de la structure noeud et ses enfants
+noeud* copy_node(noeud *src) {
+    // Vérification de la validité du pointeur
+    if (src == NULL) {
+        return NULL;
+    }
+    
+    // Création d'un nouveau noeud
+    noeud *dest = malloc(sizeof(noeud));
+    dest->est_dossier = src->est_dossier;
+    strcpy(dest->nom, src->nom);
+    dest->pere = src->pere;
+    dest->racine = src->racine;
+    dest->fils = NULL;
+    
+    // Copie des enfants
+    liste_noeud *src_child = src->fils;
+    liste_noeud *dest_child = NULL;
+    liste_noeud *prev_child = NULL;
+
+    while (src_child != NULL) {
+        // Création d'une nouvelle structure liste_noeud
+        struct liste_noeud *new_child = malloc(sizeof(liste_noeud));
+        new_child->no = copy_node(src_child->no);
+        new_child->succ = NULL;
+        
+        // Si c'est le premier enfant, on l'ajoute directement à la liste
+        if (dest_child == NULL) {
+            dest->fils = new_child;
+            dest_child = dest->fils;
+        }
+        // Sinon, on l'ajoute à la fin de la liste
+        else {
+            dest_child->succ = new_child;
+            dest_child = dest_child->succ;
+        }
+        
+        // Passage à l'enfant suivant
+        prev_child = src_child;
+        src_child = src_child->succ;
+    }
+    return dest;
+}
+
+// Fonction auxiliaire pour faire un deplacement avec la creation pour la copie
 void cpVerif2(noeud* copie,noeud* courant,char* chem){
     w_index* cheminParcour=cons_index(chem);
+
+    //! Soit on va directement faire la copie, soit on va faire le depalcement puis la copie
     if(cheminParcour->nbr==1){
         liste_noeud* li = courant->fils;
-        while(li != NULL){
+        // Si la ou on est n'a pas de fils
+        if(li==NULL){
+            ajoutL(courant,copie);
+            return ;
+        }
+        
+        // Vérifier que les fichiers n'ont pas les memes noms
+        while(li->succ != NULL){
             if(strcmp(li->no->nom,courant->nom)==0){
                 printf(" On ne pas faire une copie d'un noeud déjà existant \n");
                 exit(1);
             }
             li=li->succ;
         }
-
-        printf("-------------- 1 Affichage avant la copie -----------------\n");
-        noeud* save = copie;
-        printf(" Le noeud à copier : \n");
-        memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*strlen(cheminParcour->words[cheminParcour->nbr-1]));
-        //print(save);
-        printf(" Le noeud ou on va faire la copie \n");
-        //print(courant);
-        
-        assert(save!=NULL);
-        //ajouter maintenant la copie du fichier ou du dossier
-        ajoutL(courant,courant->fils,save);
-        printf(" ----------------1 Affichage après la copie ----------------- \n");
-        //print(save);
-        printf("-----------------------------------------------------------------\n");
-        //print(courant);
-
-         free_index(cheminParcour);
+        noeud* save=copy_node(copie);
+        memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
+        printf(" NOM de la copie : %s \n", save->nom);
+            
+        ajoutL(courant,save);
     }
     else{
         //Faire le deplacement vers l'avant dernier élément
-        noeud* creation=deplacementAuxiliaireCp2(courant,chem);
-        printf(" l 721 - cpVerif2 : Voici une description du noeud ou on va faire la copie : \n");
-        
+        noeud* creation = deplacementAuxiliaireCp2(courant,chem);
+        printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
         assert(creation != NULL);
-        if(creation->est_dossier==true){
-            printf(" l 725 - cpVerif2 : Ce chemin est bien un dossier \n");
+
+        if(creation->est_dossier==true && 
+           verification_PresenceFils(copie,creation->fils)==0 && 
+           verification_PresenceFils(creation,copie->fils)==0){
+            printf(" l 784 - cpVerif2 : Ce chemin est bien un dossier \n");
+
+            noeud* save=copy_node(copie);
+            memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
+            printf(" NOM de la copie : %s \n", save->nom);
+            
+            ajoutL(creation,save);
+            free_index(cheminParcour);   
         }
         else{
-            printf("l 728 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
+            printf(" l 794 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
             free_index(cheminParcour);
             exit(1);
-        }
-        if(verification_PresenceFils(copie,creation->fils)==0 && verification_PresenceFils(creation,copie->fils)==0){
-            printf(" l 733 :  cpVerif2 : _Normalement ils ne sont pas liés et on peut faire une copie ... \n");
-             assert(cheminParcour != NULL);
-            noeud* save=malloc(sizeof(noeud*));
-            save=copie;
-            memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*strlen(cheminParcour->words[cheminParcour->nbr-1]));
-
-             printf("--------------2 Affichage avant la copie -----------------\n");
-             //print(courant);
-             ajoutL(courant,courant->fils,save);
-             printf(" ----------------2 Affichage après la copie ----------------- \n");
-             //print(courant);
-
-             free_index(cheminParcour);
-        }
-        else{
-            printf("l:748 Bizarre ... \n");
-             free_index(cheminParcour);
-            exit(1);
-        }
+        }    
     }
 }
 

@@ -47,8 +47,27 @@ int main(){
     mkdir(positionCourante,"Photo");
     ls(positionCourante);
     rm(positionCourante,"Video");
-    //ls(positionCourante);
+    
+    ls(positionCourante);
+    positionCourante = cd(positionCourante,"Photo");
+    touch(positionCourante,"Image1");
+    touch(positionCourante,"Image2");
+    rm(positionCourante,"Image2");
+    touch(positionCourante,"Image3");
+    mkdir(positionCourante,"Picture");
 
+    ls(positionCourante);
+
+    // Utilisation de copie 
+    // Premier chemin nom du fichier à copier
+    cp(positionCourante,"Image3","Picture/CopieImage3");    
+    ls(positionCourante);
+
+    positionCourante = cd(positionCourante,"Picture");
+    ls(positionCourante);
+
+    positionCourante = cd(positionCourante,"");
+    print(positionCourante);
     printf("\n *** FIN *** \n");
 }
 

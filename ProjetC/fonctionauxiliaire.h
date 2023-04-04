@@ -17,7 +17,7 @@
 
     noeud* creationDebut();
     bool validiteNoeud(noeud* n);
-    void ajoutL(noeud* courant,liste_noeud* l, noeud* n);
+    noeud* ajoutL(noeud* courant, noeud* n);
     void descriptionNoeud(noeud* d);
 
     noeud* depCD(noeud* n, char* name);
@@ -29,6 +29,7 @@
     void liberation_noeud(noeud* n,char* chem);
 
     noeud* cpVerif1(noeud* n,char*chem);
+    noeud* copy_node(noeud *src);
     void cpVerif2(noeud* copie,noeud* courant,char* chem);
 
 #endif
