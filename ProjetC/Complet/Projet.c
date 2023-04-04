@@ -21,7 +21,20 @@ typedef struct noeud noeud;
 typedef struct liste_noeud liste_noeud;
 
 //On peut définir un noeud de type global pour verifier la position courante
-noeud* positionCourante;
+noeud* positionCourante2;
+
+// Creation de la racine
+noeud* creationDebut(){
+    noeud* n = malloc(sizeof(noeud));
+    strcpy(n->nom,"");
+    n->est_dossier=true;
+    n->fils=NULL;
+    n->pere=n;
+    n->racine=n;
+    return n;
+}
+
+
 
 // Fonction auxiliaire de verification de la validité d'un noeud
 bool validiteNoeud(noeud* n){
@@ -106,11 +119,12 @@ void ls(noeud* n){
             }
             else{
             printf("\n LS FILS\n");
-                while(li->succ != NULL){
+                while(li->succ != NULL && validiteNoeud(li->no)==true){
+
                     printf("%s\n",li->no->nom);
                     li=li->succ;
                 }
-            printf("%s\n",li->no->nom);
+                printf("%s\n",li->no->nom);
             }
         }
     }
@@ -343,7 +357,7 @@ noeud* depCD(noeud* n, char* name){
             noeud* tmp=n;
 
             // Sauvegarde du pere
-            noeud* tmpPere = malloc(sizeof(noeud*));
+            noeud* tmpPere = malloc(sizeof(noeud));
             assert(tmpPere!=NULL);
 
             liste_noeud* list=n->fils;
@@ -475,12 +489,12 @@ char* pwd(noeud* n){ // Probleme de sens inverse à régler
 }
 
 //Creation de Dossier
-void mkdir(noeud* no,char* nom){
+void* mkdir(noeud* no,char* nom){
     assert(no!=NULL);
     assert(nom!=NULL);
     if(strlen(nom)>99 || strcmp(nom,"")==0){
         printf("l4 26 mkdir: Trop de caracterre dans le nom ou trop peu \n");
-        return ;
+        exit(1);
     }
     if(no->est_dossier==false){
         printf(" mkdir : Il y a une erreur \n");
@@ -488,14 +502,15 @@ void mkdir(noeud* no,char* nom){
     }
     
     if(no->fils==NULL){
-        liste_noeud* list=malloc(sizeof(liste_noeud*));
-        noeud* li=malloc(sizeof(noeud*));
+        liste_noeud* list=malloc(sizeof(liste_noeud));
+        noeud* li=malloc(sizeof(noeud));
         li->est_dossier=true;
         strcpy(li->nom,nom);
         li->racine=no->racine;
         li->pere=no;
         li->fils=NULL;
         list->no=li;
+        list->succ=NULL;
         no->fils=list;
     }
     else{
@@ -515,10 +530,10 @@ void mkdir(noeud* no,char* nom){
             }
 
             // Gestion des affectations
-            liste_noeud* suiv=malloc(sizeof(liste_noeud*));
+            liste_noeud* suiv=malloc(sizeof(liste_noeud));
             assert(suiv!=NULL);
             suiv->succ=NULL;
-            noeud* li=malloc(sizeof(noeud*));
+            noeud* li=malloc(sizeof(noeud));
             assert(li!=NULL);
             li->est_dossier=true;
             strcpy(li->nom,nom);
@@ -548,6 +563,7 @@ void touch(noeud* no,char* nom){
         if(no->fils==NULL){
             //printf(" Parcour de TOUCH direct \n");
             liste_noeud* list=malloc(sizeof(liste_noeud));
+            list->succ=NULL;
             noeud* li=malloc(sizeof(noeud));
             li->est_dossier=false;
             strcpy(li->nom,nom);
@@ -1264,223 +1280,34 @@ void mv(noeud* n,char* chem1,char* chem2){
 }
 
 int main(){
+    printf(" Test \n");
+    noeud* positionCourante = creationDebut();
+    descriptionNoeud(positionCourante);
 
-    //Test Formation correct ou non
+     mkdir(positionCourante,"Cours");
+    descriptionNoeud(positionCourante);
+    ls(positionCourante);
+
+    positionCourante = cd(positionCourante,"Cours");
+    descriptionNoeud(positionCourante);
+    
+    mkdir(positionCourante,"Anglais");
+    ls(positionCourante);
+    
+    positionCourante = cd(positionCourante,"Anglais");
+    descriptionNoeud(positionCourante);
+    
     /*
-    char* test1="/t/ QJSQKLH/QSKH/JHSK"; // Faux
-    char* test2="/kjh//d"; //Faux
-    char* test3=".."; //Vrai
-    char* test7="sdlkfj/lsdkh/zei/qoei";//Vrai
-    char* test8="/qsjd/jkfh/zoiey/jdk/d";//Vrai
-    char* test4="/d/lkdh/sdj/";//Faux
-    char* test5="lskh/lksjd/iory/;/ksl";//Faux
-    char* test6=".";//Faux  
-    printf("-- Test1 %d\n",verif(test1));
-    printf("-- Test2 %d\n",verif(test2));
-    printf("-- Test3 %d\n",verif(test3));
-    printf("-- Test4 %d\n",verif(test4));
-    printf("-- Test5 %d\n",verif(test5));
-    printf("-- Test6 %d\n",verif(test6));
-    printf("-- Test7 %d\n",verif(test7));
-    printf("-- Test8 %d\n",verif(test8));
-    */
-
-    //Test du nombre de mot
-    /*
-    char* testVrai="/ldkf/ki/mldjf/kjdh/oeir";
-    char* testVrai2="ldkghtf/ki/mldjf/kji";
-    printf("Nombre de mot test1 : %d \n",nbr_words(testVrai));
-    printf("Nombre de mot test2 : %d \n",nbr_words(testVrai2));
-
-    //Test longuer d'un mot dans notre cas
-    printf("Nombre de mot à la premiere adresse testVrai: %d\n",word_len(testVrai));
-    printf("Nombre de mot à la  première adresse testVrai2: %d\n",word_len(testVrai2));
-    
-    //Test de la creation d'un index pour des caractères donné
-    //w_index* resultat=cons_index("td/tp/anglais/bien");
-    w_index* resultat2=cons_index("/td/tp/anglais/bien");
-    //print_index(resultat);
-    print_index(resultat2);
-    */
-    
-    printf("Creation noeud a1\n");
-    noeud a1;
-    
-    //Creation Noeud a2
-    printf("Creation Noeud a2\n");
-    noeud a2;
-    a2.est_dossier=true;
-    char* a21="Cours";
-    memmove(a2.nom,a21,sizeof(char)*6);
-    a2.pere=&a1;
-    a2.racine=&a1;
-    
-    //Creation du noeud a5
-    printf("Creation Noeud a5\n");
-    noeud a5;
-    a5.est_dossier=true;
-    char* a51="ProjetC";
-    memmove(a5.nom,a51,sizeof(char)*8);
-    a5.pere=&a2;
-    a5.racine=&a1;
-    a5.fils=NULL;
-    
-    //Creation du noeud a6
-    printf("Creation Noeud a6\n");
-    noeud a6;
-    a6.est_dossier=true;
-    char* c="Anglais";
-    memmove(a6.nom,c,sizeof(char)*8);
-    a6.pere=&a2;
-    a6.racine=&a1;
-    a6.fils=NULL;
-
-    printf("Creation liste A2 \n");
-    liste_noeud filsA2;
-    filsA2.no=&a5;
-    filsA2.succ=NULL;
-    printf("Ajout des fils de A2\n");
-    a2.fils=&filsA2;
-
-    //Ajout dans notre liste  avec la fonction auxiliaire
-    ajoutL(&a2,&filsA2,&a6);
-    
-    //----Premier test de ls
-    liste_noeud filsA1;
-    filsA1.no=&a2;
-    filsA1.succ=NULL;
-    a1.est_dossier=true;
-    char* a="~";
-    memmove(a1.nom,a,sizeof(char)*2);
-    a1.pere=&a1;
-    a1.racine=&a1;
-    a1.fils=&filsA1;
-
-    positionCourante=&a1;
-    positionCourante->pere=positionCourante;
-    
-    //ls(positionCourante);
-
-    printf("\n");
-    descriptionNoeud(positionCourante);
-    //descriptionNoeud(&a2);
-    //descriptionNoeud(&a5);
-    //descriptionNoeud(&a6);
-        
-    positionCourante=cd(positionCourante,"Cours");
-    assert(positionCourante!=NULL);
-    assert(positionCourante->pere!=NULL);
-    ls(positionCourante);
-    descriptionNoeud(positionCourante);
-
-    positionCourante=cd(positionCourante,"ProjetC");
-    assert(positionCourante!=NULL);
-    assert(positionCourante->pere!=NULL);
-    
-    ls(positionCourante);
-    
-    
-    positionCourante=cd(positionCourante,"");
-    assert(positionCourante!=NULL);
-    assert(positionCourante->pere!=NULL);
-    
-    descriptionNoeud(positionCourante);
-    ls(positionCourante);
-    //descriptionNoeud(positionCourante);
-    
-    printf("\nCreation de fichier avec TOUCH\n");
     touch(positionCourante,"edt");
-    
-    printf("\nCreation de dossier avec MKDIR\n");
-    mkdir(positionCourante,"Dossier");
-    
-    assert(positionCourante!=NULL);
-    assert(positionCourante->pere!=NULL);
-    
     ls(positionCourante);
-    
-    print(positionCourante);
-    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
-    positionCourante=cd(positionCourante,"Dossier");
-    //ls(positionCourante);
-
-    
-    positionCourante=cd(positionCourante,"..");
     descriptionNoeud(positionCourante);
     
-    positionCourante=cd(positionCourante,"Cours/ProjetC");
-    descriptionNoeud(positionCourante); 
-
-    //IL faut faire une fonction qui inverse les trucs    
-    char* testPWD = pwd(positionCourante);
-    //assert(testPWD!=NULL);
-    
-    printf("\n pwd : %s ",testPWD);
-
-    positionCourante=cd(positionCourante,"");
-    printf(" retour :  %s ",pwd(positionCourante));
-    
-    touch(positionCourante,"FichierA");
-    ls(positionCourante);
-
-    //Test de la fonction de recherche des trucs
-    print(positionCourante);
-
-    //Test de notre fonction auxiliaire
-    noeud* positionTest=positionCourante->fils->no;
-    if(verification_PresenceFils(positionTest, positionCourante->fils)){
-        printf("Verification true \n\n");
-    }
-    else{
-        printf("Verification false \n\n");
-    }
-
-    //------Fonction auxiliaire pour vérifier que le chemin que l'on donne est correct
-    
-    //bool test1=chemin_existe(positionTest,"");//false
-    //bool test2= chemin_existe(positionTest,"..");//false
-    //bool test3= chemin_existe(positionTest,"/~/Cours");//true
-    //bool test4= chemin_existe(positionTest,"/~/Dossier");//true
-    //bool test5= chemin_existe(positionTest,"Cours/Chemin");//false
-    
-    //if(test1==0){ printf("Test1 réussi\n");}else{printf("Test1 echoué\n");}
-    //if(test2==0){printf("Test2 réussi\n");}else{printf("Test2 echoué\n");}
-    //if(test3==1){printf("Test3 réussi\n");}else{printf("Test3 echoué\n");}
-    //if(test4==1){printf("Test4 réussi\n");}else{printf("Test4 echoué\n");}
-    //if(test5==0){printf("Test5 réussi\n");}else{printf("Test5 echoué\n");}
-    
-    //Test de notre fonction rm
-    rm(positionCourante,"FichierA");
-    rm(positionCourante,"/Dossier");
-    
-    print(positionCourante);
-    
-    mkdir(positionCourante,"Dossier2");
-    touch(positionCourante,"Fichier2");
-
-    print(positionCourante);
-
-    // ERREUR ICI segmentaion fault qui est incompréhensible
-    positionCourante=cd(positionCourante,"Dossier2");
-    //print(positionCourante);
-    printf("***********************************************\n");
-    //mkdir(positionCourante,"DossierCours");
-    //mkdir(positionCourante,"DossierErreur");
-    //descriptionNoeud(positionCourante);
-    
-    //positionCourante=cd(positionCourante,"");
-    //printf("\n Avant \n");
-    //print(positionCourante);
-    //printf("-----------------------------------------------\n");
-    /*
-    print(positionCourante);
-    mkdir(positionCourante,"FichierCopi");
-    mkdir(positionCourante,"Dossier4");
-    print(positionCourante);
+    positionCourante = cd(positionCourante,"");
+    descriptionNoeud(positionCourante);
     */
-
-    //cp(positionCourante,"/Cours","DossierCours");
     //print(positionCourante);
+
+    printf("\n *** FIN *** \n");
     
 }
 

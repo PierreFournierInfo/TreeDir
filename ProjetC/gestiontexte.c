@@ -77,8 +77,8 @@ int word_len(const char* w){
 
 //Extraire un mot à partir d'une position
 char* extract_word(const char* str,int n){
-    if(str==NULL || n==0){
-        printf("Invalid dans extract word ligne 143");
+    if(str==NULL){
+        printf("\033[1;31m (Gestion de texte) Extract_Word Syntaxe Invalide !! \033[0m \n");
         exit(1);
     }
     if(verif(str)){
