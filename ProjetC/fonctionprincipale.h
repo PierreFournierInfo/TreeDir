@@ -3,7 +3,7 @@
 #define FONCTIONAUXILIAIRE_H
     void ls(noeud* n);
     noeud* cd(noeud* n,char* name);
-    char* pwd(noeud* n);
+    void pwd(noeud* n);
     void mkdir(noeud* no,char* nom);
     void touch(noeud* no,char* nom);
     void print(noeud* n);

@@ -66,8 +66,12 @@ int main(){
     positionCourante = cd(positionCourante,"Picture");
     ls(positionCourante);
 
-    positionCourante = cd(positionCourante,"");
-    print(positionCourante);
+    printf("\033[33m");
+    pwd(positionCourante);
+    printf("\033[0m \n");
+
+    //positionCourante = cd(positionCourante,"");
+    //print(positionCourante);
     printf("\n *** FIN *** \n");
 }
 

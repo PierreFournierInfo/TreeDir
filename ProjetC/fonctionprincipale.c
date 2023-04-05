@@ -70,37 +70,17 @@ noeud* cd(noeud* n,char* name){
 }
 
 // Affichage du chemin du noeud sur le temrinal 
-char* pwd(noeud* n){ // Probleme de sens inverse à régler
+void pwd(noeud* n){ // Probleme de sens inverse à régler
     assert(n!=NULL);
     if(!validiteNoeud(n)){ 
         printf(" pwd : Il y a des problèmes de liaisons ");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    char* tmp=malloc(sizeof(char)*strlen(n->nom)+1);
-    memmove(tmp,n->nom,sizeof(char)*strlen(n->nom));
-    // Si on est directement placé au debut 
-    
-    if(strcmp(n->nom,n->racine->nom)==0){
-        //printf("Retour direct pwd \n");
-        return tmp;
-    }
-    //Sinon remonter jusqu'à la racine
-    else{
-        char* save=n->racine->nom;
-        noeud* parc=n;
-        
-        while(strcmp(save,parc->nom)!=0){
-            int x=strlen(parc->pere->nom);
-            int y=strlen(tmp);
-
-            tmp=realloc(tmp,y+x+1);
-            strncat(tmp,"/",sizeof(char)*1);
-            strncat(tmp,parc->pere->nom,sizeof(char)*x+sizeof(char));
-            parc=parc->pere;
-        }
-        return tmp;
-    }
-    return tmp;
+   if(strcmp(n->racine->nom,n->nom)==0){
+    return ;
+   }
+    pwd(n->pere); // Appel récursif pour le noeud père
+    printf("/%s", n->nom); // Affichage du nom du noeud courant avec un "/"
 }
 
 //Creation de Dossier
@@ -159,7 +139,6 @@ void mkdir(noeud* no,char* nom){
             li->fils=NULL;
             suiv->no=li;
             
-            //descriptionNoeud(li);
             parc->succ=suiv;
             printf("\n"); // Debug
     }
