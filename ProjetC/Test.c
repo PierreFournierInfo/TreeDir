@@ -9,69 +9,56 @@
 #include "fonctionprincipale.h"
 
 
-int main(){
-    printf(" Test \n");
-    noeud* positionCourante = creationDebut();
-    descriptionNoeud(positionCourante);
-
-    mkdir(positionCourante,"Cours");
-    descriptionNoeud(positionCourante);
-
-    positionCourante = cd(positionCourante,"Cours");
-    descriptionNoeud(positionCourante);
-    
-    mkdir(positionCourante,"Anglais");
-    mkdir(positionCourante,"Maths");
-    mkdir(positionCourante,"Physique");
-    touch(positionCourante,"Fichier1");
-    ls(positionCourante);
-
-    positionCourante = cd(positionCourante,"");
-    //positionCourante = cd(positionCourante,"Fichier1"); Test reussi
-    print(positionCourante);
-
-    positionCourante = cd(positionCourante,"Cours/Anglais");
-    descriptionNoeud(positionCourante);
-    
-    touch(positionCourante,"edt");
-    ls(positionCourante);
-    descriptionNoeud(positionCourante);
-    
-    positionCourante = cd(positionCourante,"");
-    descriptionNoeud(positionCourante);
-    
-    print(positionCourante);
-    
-    ls(positionCourante);
-    mkdir(positionCourante,"Video");
-    mkdir(positionCourante,"Photo");
-    ls(positionCourante);
-    rm(positionCourante,"Video");
-    
-    ls(positionCourante);
-    positionCourante = cd(positionCourante,"Photo");
-    touch(positionCourante,"Image1");
-    touch(positionCourante,"Image2");
-    rm(positionCourante,"Image2");
-    touch(positionCourante,"Image3");
-    mkdir(positionCourante,"Picture");
-
-    ls(positionCourante);
-
-    // Utilisation de copie 
-    // Premier chemin nom du fichier à copier
-    cp(positionCourante,"Image3","Picture/CopieImage3");    
-    ls(positionCourante);
-
-    positionCourante = cd(positionCourante,"Picture");
-    ls(positionCourante);
-
-    printf("\033[33m");
-    pwd(positionCourante);
-    printf("\033[0m \n");
-
-    //positionCourante = cd(positionCourante,"");
-    //print(positionCourante);
-    printf("\n *** FIN *** \n");
+noeud* courant;
+void call_function(noeud* n, char *name, char *arg) {
+    if (strcmp(name, "ls") == 0) {
+        ls(n);
+    } else if (strcmp(name, "pwd") == 0) {
+        pwd(n);
+    } else if (strcmp(name, "mkdir") == 0) {
+        mkdir(n,arg);
+    } else if (strcmp(name, "touch") == 0) {
+        touch(n,arg);
+    } else if (strcmp(name, "rm") == 0) {
+        rm(n,arg);
+    } else if (strcmp(name, "cd") == 0) {
+        n = cd(n,arg);
+    } else {
+        printf("La fonction '%s' n'existe pas\n", name);
+    }
 }
 
+int main() {
+    char input[100];
+    char name[20], arg[80];
+
+   courant=creationDebut();
+
+    while (1) {
+        printf("=> ");
+        fflush(stdout);
+        fgets(input, 100, stdin);
+        sscanf(input, "%s %s", name, arg);
+
+        if (strcmp(name, "quit") == 0) {
+            break;
+        }
+        else if (strcmp(name, "ls") == 0) {
+        ls(courant);
+        } else if (strcmp(name, "pwd") == 0) {
+            pwd(courant);
+            printf("\n");
+        } else if (strcmp(name, "mkdir") == 0) {
+            mkdir(courant,arg);
+        } else if (strcmp(name, "touch") == 0) {
+            touch(courant,arg);
+        } else if (strcmp(name, "rm") == 0) {
+            rm(courant,arg);
+        } else if (strcmp(name, "cd") == 0) {
+            courant = cd(courant,arg);
+        } else {
+            printf("La fonction '%s' n'existe pas\n", name);
+        }
+    }
+    return 0;
+}

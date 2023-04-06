@@ -10,31 +10,23 @@
 
 void ls(noeud* n){
     assert(n!=NULL);
-    printf("\n");
-    // Parcours de la liste des fils 
+    printf(" \033[35m");
     if(n->est_dossier){
-        //printf("Parcour Debut Dans LS \n");
         if(n->fils==NULL){
-            printf("-- Vide LS\n");
+            printf("__");
         }
         else{
             liste_noeud* li=n->fils;
-            // Si il n'y a pas de fils 
-            if(li==NULL){
-                printf(" FILS NULL\n"); 
-            }
-            else{
-            printf("\n LS FILS\n");
+            if(li!=NULL){
                 while(li->succ != NULL && validiteNoeud(li->no)==true){
-
-                    printf("%s\n",li->no->nom);
+                    printf("%s ",li->no->nom);
                     li=li->succ;
                 }
-                printf("%s\n",li->no->nom);
+                printf("%s ",li->no->nom);
             }
         }
     }
-    printf("\n");
+    printf("\033[0m\n");
 }
 
 //Deplacement de chem normalement seulement dans un dossier
@@ -54,7 +46,7 @@ noeud* cd(noeud* n,char* name){
         assert(n->pere!=NULL);
         assert(n->pere->nom!=NULL);
         if(strcmp(n->pere->nom,"")!=0){
-            printf("=> Retour pere possible");
+            printf("> Retour pere possible");
             n=n->pere;
         }
         return n;
@@ -64,7 +56,7 @@ noeud* cd(noeud* n,char* name){
         }
    }
    else{
-    printf("=> cd : Il y a une erreur dans le chemin qui est donné !! ");
+    printf(">cd:Il y a une erreur dans le chemin qui est donné !! ");
     exit(1);
    }
 }
@@ -73,7 +65,7 @@ noeud* cd(noeud* n,char* name){
 void pwd(noeud* n){ // Probleme de sens inverse à régler
     assert(n!=NULL);
     if(!validiteNoeud(n)){ 
-        printf(" pwd : Il y a des problèmes de liaisons ");
+        printf("\033[33m pwd : Il y a des problèmes de liaisons \033[0m");
         exit(EXIT_FAILURE);
     }
    if(strcmp(n->racine->nom,n->nom)==0){
@@ -88,11 +80,11 @@ void mkdir(noeud* no,char* nom){
     assert(no!=NULL);
     assert(nom!=NULL);
     if(strlen(nom)>99 || strcmp(nom,"")==0){
-        printf("l4 26 mkdir: Trop de caracterre dans le nom ou trop peu \n");
+        printf("\033[33m mkdir: Trop de caractere dans le nom ou trop peu \033[0m\n");
         exit(1);
     }
     if(no->est_dossier==false){
-        printf(" mkdir : Il y a une erreur \n");
+        printf("\033[33m mkdir : Il y a une erreur \033[0m\n");
         exit(1);
     }
     
@@ -113,14 +105,14 @@ void mkdir(noeud* no,char* nom){
         liste_noeud* parc=no->fils;
             while(parc->succ!=NULL){
                 if(strcmp(parc->no->nom,nom)==0){
-                    printf("l 451 - mkdir : Il y a déjà ce nom de fichier dans la liste\n");
+                    printf("\033[33m mkdir : Il y a déjà ce nom de fichier dans la liste \033[30m\n");
                     return ;
                 }
                 parc=parc->succ;
             }
             assert(parc!=NULL);
             if(strcmp(parc->no->nom,nom)==0){
-                printf("l 457 - Il y a déjà ce nom de fichier dans la liste\n");
+                printf("\033[33mmkdir :  - Il y a déjà ce nom de fichier dans la liste \033[35m\n");
                 return ;
             }
 
@@ -140,7 +132,6 @@ void mkdir(noeud* no,char* nom){
             suiv->no=li;
             
             parc->succ=suiv;
-            printf("\n"); // Debug
     }
 }
 
@@ -149,7 +140,7 @@ void touch(noeud* no,char* nom){
     assert(nom !=NULL);
     assert(no!=NULL);
     if(strlen(nom)>99 || strcmp(nom,"")==0){
-        printf("l 483 touch : Trop de caracterre dans le nom ou trop peu \n");
+        printf("touch : Trop de caracterre dans le nom ou trop peu \n");
         return ;
     }
     if(no->est_dossier){
@@ -172,16 +163,15 @@ void touch(noeud* no,char* nom){
             liste_noeud* parc=no->fils;
             while(parc->succ!=NULL){
                 if(strcmp(parc->no->nom,nom)==0){
-                    printf("l 505 - touch : Il y a déjà ce nom de fichier dans la liste\n");
+                    printf("touch : Il y a déjà ce nom de fichier dans la liste\n");
                     return ;
                 }
                 parc=parc->succ;
             }
             if(strcmp(parc->no->nom,nom)==0){
-                    printf("l 505 - Il y a déjà ce nom de fichier dans la liste\n");
+                    printf("touch :  Il y a déjà ce nom de fichier dans la liste\n");
                     return ;
             }
-
             // Gestion des affectations
             liste_noeud* suiv=malloc(sizeof(liste_noeud));
             suiv->succ=NULL;

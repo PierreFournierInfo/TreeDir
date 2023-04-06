@@ -168,7 +168,7 @@ noeud* depCD(noeud* n, char* name){
                                 tmpPere=list->no->pere;
                             }
                             else{
-                                printf("(depCD else 165) Erreur dans les deplacement internes \n");
+                                printf(" (depCD else 165) Erreur dans les deplacement internes \n");
                                 exit(1);
                             }
                             list=tmp->fils;
@@ -707,7 +707,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
 }
 
 // Fonction pour copier un pointeur de la structure noeud et ses enfants
-noeud* copy_node(noeud *src) {
+noeud* copy_noeud(noeud *src) {
     // Vérification de la validité du pointeur
     if (src == NULL) {
         return NULL;
@@ -729,7 +729,7 @@ noeud* copy_node(noeud *src) {
     while (src_child != NULL) {
         // Création d'une nouvelle structure liste_noeud
         struct liste_noeud *new_child = malloc(sizeof(liste_noeud));
-        new_child->no = copy_node(src_child->no);
+        new_child->no = copy_noeud(src_child->no);
         new_child->succ = NULL;
         
         // Si c'est le premier enfant, on l'ajoute directement à la liste
@@ -771,7 +771,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
             }
             li=li->succ;
         }
-        noeud* save=copy_node(copie);
+        noeud* save=copy_noeud(copie);
         memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
         printf(" NOM de la copie : %s \n", save->nom);
             
@@ -788,7 +788,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
            verification_PresenceFils(creation,copie->fils)==0){
             printf(" l 784 - cpVerif2 : Ce chemin est bien un dossier \n");
 
-            noeud* save=copy_node(copie);
+            noeud* save=copy_noeud(copie);
             memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
             printf(" NOM de la copie : %s \n", save->nom);
             
