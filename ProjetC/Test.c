@@ -10,41 +10,24 @@
 
 
 noeud* courant;
-void call_function(noeud* n, char *name, char *arg) {
-    if (strcmp(name, "ls") == 0) {
-        ls(n);
-    } else if (strcmp(name, "pwd") == 0) {
-        pwd(n);
-    } else if (strcmp(name, "mkdir") == 0) {
-        mkdir(n,arg);
-    } else if (strcmp(name, "touch") == 0) {
-        touch(n,arg);
-    } else if (strcmp(name, "rm") == 0) {
-        rm(n,arg);
-    } else if (strcmp(name, "cd") == 0) {
-        n = cd(n,arg);
-    } else {
-        printf("La fonction '%s' n'existe pas\n", name);
-    }
-}
 
 int main() {
-    char input[100];
-    char name[20], arg[80];
+    char input[200];
+    char name[30], arg[100];
 
    courant=creationDebut();
 
     while (1) {
-        printf("=> ");
+        printf("\033[34m/%s\033[0m\n",courant->nom);
+        printf("> ");
         fflush(stdout);
         fgets(input, 100, stdin);
         sscanf(input, "%s %s", name, arg);
 
         if (strcmp(name, "quit") == 0) {
             break;
-        }
-        else if (strcmp(name, "ls") == 0) {
-        ls(courant);
+        }else if (strcmp(name, "ls") == 0) {
+            ls(courant);
         } else if (strcmp(name, "pwd") == 0) {
             pwd(courant);
             printf("\n");
@@ -56,9 +39,23 @@ int main() {
             rm(courant,arg);
         } else if (strcmp(name, "cd") == 0) {
             courant = cd(courant,arg);
+        } else if (strcmp(name, "print") == 0) {
+            print(courant);
+        } else if (strcmp(name, "racine") == 0) {
+            courant=cd(courant,"");
         } else {
             printf("La fonction '%s' n'existe pas\n", name);
         }
     }
+
+    cp(courant,"Cours","/Td");
+    ls(courant);
+    rm(courant,"/Td/ProjetC");
+    rm(courant,"/Td/Anglais");
+    courant=cd(courant,"Td");
+    mkdir(courant,"td1");
+    mkdir(courant,"td2");
+    print(courant);
+
     return 0;
 }

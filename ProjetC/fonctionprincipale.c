@@ -10,8 +10,8 @@
 
 void ls(noeud* n){
     assert(n!=NULL);
-    printf(" \033[35m");
-    if(n->est_dossier){
+    printf("\033[35m");
+    if(n->est_dossier==true){
         if(n->fils==NULL){
             printf("__");
         }
@@ -25,6 +25,10 @@ void ls(noeud* n){
                 printf("%s ",li->no->nom);
             }
         }
+    }
+    else{
+        printf(" On n'est pas dans un dossier il y a eu un deplacement inattendu!");
+        exit(EXIT_FAILURE);
     }
     printf("\033[0m\n");
 }
@@ -40,19 +44,19 @@ noeud* cd(noeud* n,char* name){
      return n;
    }
    else if(verif(name)==1){
-    //Traiter le cas du RETOUR
-    if(strcmp(name,"..")==0){
-        //printf("\nRetour Direct \n");
-        assert(n->pere!=NULL);
-        assert(n->pere->nom!=NULL);
-        if(strcmp(n->pere->nom,"")!=0){
-            printf("> Retour pere possible");
-            n=n->pere;
+        //Traiter le cas du RETOUR
+        if(strcmp(name,"..")==0){
+            //printf("\nRetour Direct \n");
+            assert(n->pere!=NULL);
+            assert(n->pere->nom!=NULL);
+            if(strcmp(n->pere->nom,"")!=0){
+                //printf("> Retour pere possible\n");
+                n=n->pere;
+            }
+            return n;
         }
-        return n;
-    }
-    else{
-           return depCD(n,name);
+        else{
+            return depCD(n,name);
         }
    }
    else{
@@ -80,12 +84,12 @@ void mkdir(noeud* no,char* nom){
     assert(no!=NULL);
     assert(nom!=NULL);
     if(strlen(nom)>99 || strcmp(nom,"")==0){
-        printf("\033[33m mkdir: Trop de caractere dans le nom ou trop peu \033[0m\n");
-        exit(1);
+        printf("\033[31m mkdir: Trop de caractere dans le nom ou trop peu \033[0m\n");
+        exit(EXIT_FAILURE);
     }
     if(no->est_dossier==false){
-        printf("\033[33m mkdir : Il y a une erreur \033[0m\n");
-        exit(1);
+        printf("\033[31m mkdir : Il y a une erreur \033[0m\n");
+        exit(EXIT_FAILURE);
     }
     
     if(no->fils==NULL){
@@ -105,14 +109,14 @@ void mkdir(noeud* no,char* nom){
         liste_noeud* parc=no->fils;
             while(parc->succ!=NULL){
                 if(strcmp(parc->no->nom,nom)==0){
-                    printf("\033[33m mkdir : Il y a déjà ce nom de fichier dans la liste \033[30m\n");
+                    printf("\033[31m mkdir : Il y a déjà ce nom de fichier dans la liste \033[0m\n");
                     return ;
                 }
                 parc=parc->succ;
             }
             assert(parc!=NULL);
             if(strcmp(parc->no->nom,nom)==0){
-                printf("\033[33mmkdir :  - Il y a déjà ce nom de fichier dans la liste \033[35m\n");
+                printf("\033[31mmkdir :  - Il y a déjà ce nom de fichier dans la liste \033[0m\n");
                 return ;
             }
 
@@ -140,7 +144,7 @@ void touch(noeud* no,char* nom){
     assert(nom !=NULL);
     assert(no!=NULL);
     if(strlen(nom)>99 || strcmp(nom,"")==0){
-        printf("touch : Trop de caracterre dans le nom ou trop peu \n");
+        printf("\033[31m touch : Trop de caracterre dans le nom ou trop peu \033[0m\n");
         return ;
     }
     if(no->est_dossier){
@@ -163,13 +167,13 @@ void touch(noeud* no,char* nom){
             liste_noeud* parc=no->fils;
             while(parc->succ!=NULL){
                 if(strcmp(parc->no->nom,nom)==0){
-                    printf("touch : Il y a déjà ce nom de fichier dans la liste\n");
+                    printf("\033[31mtouch : Il y a déjà ce nom de fichier dans la liste \033[0m\n");
                     return ;
                 }
                 parc=parc->succ;
             }
             if(strcmp(parc->no->nom,nom)==0){
-                    printf("touch :  Il y a déjà ce nom de fichier dans la liste\n");
+                    printf("\033[31mtouch :  Il y a déjà ce nom de fichier dans la liste \033[0m\n");
                     return ;
             }
             // Gestion des affectations
@@ -190,24 +194,25 @@ void touch(noeud* no,char* nom){
 //Print
 void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
     if(n==NULL){
-        printf(" Le noeud à décrire est NULL \n");
+        printf("\031[31m Le noeud à décrire est NULL \033[0m\n");
         return ;
     }
     noeud* parc=n;
     assert(parc!=NULL);
     liste_noeud* save = n->fils;
-    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"")!=0 &&
-     save->no->pere != NULL && save->no->racine != NULL){
+    
+    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"")!=0
+       && save->no->pere != NULL && save->no->racine != NULL){
         if(strcmp(parc->nom,parc->pere->nom)==0){
             printf("Noeud %s , %d fils: ",parc->nom,nbFils(parc));
             liste_noeud* pFils=parc->fils;
             while(pFils!=NULL){
                     printf(" %s",pFils->no->nom);
                     if(pFils->no->est_dossier){
-                        printf("(D)| ");
+                        printf("\033[31m(D)| \033[0m");
                     }
                     else{
-                        printf("(F)| ");
+                        printf("\033[32m(F)| \033[0m");
                     }
             pFils=pFils->succ;
             }
@@ -221,18 +226,16 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
                 printf(" %s ",pFils->no->nom);
                 if(pFils->no !=NULL){
                     if(pFils->no->est_dossier==true){
-                        printf("(D)| ");
+                        printf("\033[31m(D)| \033[0m");
                     }
                     else{
-                        printf("(F)| ");
+                        printf("\033[32m(F)| \033[0m");
                     }
                 }
             pFils=pFils->succ;
-            }
-            
+            }   
         printf("\n");
         }
-        
         // Parcour recursif de nos éléments
         while(save!=NULL){
             print(save->no);
@@ -244,52 +247,52 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
         if(strcmp(n->nom,n->pere->nom)==0){
             printf("Noeud: %s ", n->nom);
             if(n->est_dossier==true){
-                printf("(D)| 0 fils\n");
+                printf("\033[31m(D)|\033[0m 0 fils\n");
             }
             else{
-                printf(" (F)| 0 fils\n");
+                printf("\033[32m (F)|\033[0m 0 fils\n");
             }
         }
         else{
             printf("Noeud : %s ", n->nom);
             if(n->est_dossier==true){
-                printf("(D)| père : %s , 0 fils \n", n->pere->nom);
+                printf("\033[31m(D)|\033[0m père : %s , 0 fils \n", n->pere->nom);
             } 
             else{
-                printf("(F)| père: %s , 0 fils \n",n->pere->nom);
+                printf("\033[31m(F)|\033[0m père: %s , 0 fils \n",n->pere->nom);
             }
         }
     }
 }
 
-
 void rm(noeud* n,char* chem){
     // La manière dont j'ai imaginé est de verifier en premier la cohérence du chemin 
     // Ensuite on va vérifier que c'est un chemin ou notre noeud n'est pas situé 
+    
 
     if(chemin_existe(n,chem)==1){
-        printf("\n \033[34m l 302 - rm: Le chemin que l'on a donné est correct \033[0m \n");
+        //printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné est correct \033[0m ");
         //On va maintenant se déplacer vers ce chemin via un cd 
         noeud* dep=deplacementCalculer(n,chem);
         assert(dep!=NULL);
 
         //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
         if(verification_PresenceFils(n,dep->fils)==0){
-            printf("\n \033[34m l 312 - rm: Ce chemin n'est pas sur le noeud courant où on est situé \033[0m \n");
+            //printf("\n \033[34ml 281 - rm: Ce chemin n'est pas sur le noeud courant où on est situé \033[0m ");
             
             //Utiliser une fonction auxiliaire de libération de la mémoire
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
-            printf("\n \033[34m l 316 - rm : liberation des noeuds \033[0m \n");
+            //printf("\n \033[34ml 285 - rm : liberation des noeuds \033[0m \n");
             liberation_noeud(n,chem);
         }
         else{
-            printf("\n \033[33m l 320 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
-            exit(1);
+            printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
+            exit(EXIT_FAILURE);
         }
     }
     else{
-        printf(" \n \033[33m l 325 - rm: Ce chemin est incorrect \033[0m \n");
-        exit(1);
+        printf(" \n\033[31ml 294 - rm: Ce chemin est incorrect \033[0m \n");
+        exit(EXIT_FAILURE);
     }
 }
 
