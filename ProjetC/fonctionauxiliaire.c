@@ -731,7 +731,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
 }
 
 // Fonction pour copier un pointeur de la structure noeud et ses enfants
-noeud* copy_noeud(noeud *src) {
+noeud* copy_noeud(noeud *src,char* chem,char* nomPere) {
     // Vérification de la validité du pointeur
     if (src == NULL) {
         return NULL;
@@ -740,10 +740,17 @@ noeud* copy_noeud(noeud *src) {
     // Création d'un nouveau noeud
     noeud *dest = malloc(sizeof(noeud));
     dest->est_dossier = src->est_dossier;
-    strcpy(dest->nom, src->nom);
+        // Gestion du nom à changer pour le noeud courant
+        if(chem != NULL) strcpy(dest->nom, chem); 
+        else strcpy(dest->nom, src->nom);
+
     dest->pere = src->pere;
+        //Gestion du nom pour le pere
+        if(nomPere!=NULL) strcpy(dest->pere->nom, nomPere);
     dest->racine = src->racine;
     dest->fils = NULL;
+    printf("Copie\n");
+    descriptionNoeud(dest);
     
     // Copie des enfants
     liste_noeud *src_child = src->fils;
@@ -752,8 +759,8 @@ noeud* copy_noeud(noeud *src) {
 
     while (src_child != NULL) {
         // Création d'une nouvelle structure liste_noeud
-        struct liste_noeud *new_child = malloc(sizeof(liste_noeud));
-        new_child->no = copy_noeud(src_child->no);
+        liste_noeud *new_child = malloc(sizeof(liste_noeud));
+        new_child->no = copy_noeud(src_child->no,NULL,dest->nom);
         new_child->succ = NULL;
         
         // Si c'est le premier enfant, on l'ajoute directement à la liste
@@ -795,8 +802,8 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
             }
             li=li->succ;
         }
-        noeud* save=copy_noeud(copie);
-        memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
+        noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
+        //memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
         printf(" NOM de la copie : %s \n", save->nom);
             
         ajoutL(courant,save);
@@ -812,8 +819,8 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
            verification_PresenceFils(creation,copie->fils)==0){
             printf(" l 784 - cpVerif2 : Ce chemin est bien un dossier \n");
 
-            noeud* save=copy_noeud(copie);
-            memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
+            noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
+            //memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
             printf(" NOM de la copie : %s \n", save->nom);
             
             ajoutL(creation,save);

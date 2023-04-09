@@ -50,12 +50,15 @@ int main() {
 
     cp(courant,"Cours","/Td");
     ls(courant);
-    rm(courant,"/Td/ProjetC");
-    rm(courant,"/Td/Anglais");
-    courant=cd(courant,"Td");
-    mkdir(courant,"td1");
-    mkdir(courant,"td2");
     print(courant);
+
+    rm(courant,"/Td/ProjetC");
+    //rm(courant,"/Td/Anglais");
+    //print(courant);
+    //courant=cd(courant,"Td");
+    //mkdir(courant,"td1");
+    //mkdir(courant,"td2");
+    //print(courant);
 
     return 0;
 }

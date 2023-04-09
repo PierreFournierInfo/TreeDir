@@ -29,7 +29,7 @@
     void liberation_noeud(noeud* n,char* chem);
 
     noeud* cpVerif1(noeud* n,char*chem);
-    noeud* copy_noeud(noeud *src);
+    noeud* copy_noeud(noeud *src,char* chem,char* nomPere);
     void cpVerif2(noeud* copie,noeud* courant,char* chem);
 
 #endif
