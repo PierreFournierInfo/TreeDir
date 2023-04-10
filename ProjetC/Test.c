@@ -8,17 +8,20 @@
 #include "fonctionauxiliaire.h"
 #include "fonctionprincipale.h"
 
-
 noeud* courant;
 
 int main() {
+    
     char input[200];
     char name[30], arg[100];
 
    courant=creationDebut();
-
+    
     while (1) {
-        printf("\033[34m/%s\033[0m\n",courant->nom);
+        printf("\033[34m");
+        printf("~");
+        pwd(courant);
+        printf("\033[0m\n");
         printf("> ");
         fflush(stdout);
         fgets(input, 100, stdin);
@@ -43,22 +46,24 @@ int main() {
             print(courant);
         } else if (strcmp(name, "racine") == 0) {
             courant=cd(courant,"");
-        } else {
+        } else if (strcmp(name, "copy") == 0) {
+            cp(courant,"Cours","/Td");
+        }else {
             printf("La fonction '%s' n'existe pas\n", name);
         }
     }
 
-    cp(courant,"Cours","/Td");
-    ls(courant);
+    rm(courant,"/Td/Anglais");
     print(courant);
-
-    rm(courant,"/Td/ProjetC");
-    //rm(courant,"/Td/Anglais");
-    //print(courant);
-    //courant=cd(courant,"Td");
-    //mkdir(courant,"td1");
-    //mkdir(courant,"td2");
-    //print(courant);
+    courant=cd(courant,"Td");
+    mkdir(courant,"td1");
+    mkdir(courant,"td2");
+    print(courant);
+    
+   w_index* test=cons_index("a/b/c/d/e/f");
+    print_index(test);
 
     return 0;
 }
+
+

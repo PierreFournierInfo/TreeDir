@@ -6,12 +6,7 @@
     char** words;
     }w_index;
 
-    //Verifier la coherence du mot donné
     bool verif(const char* mot);
-    int nbr_words(const char* a);
-    int word_len(const char* w);
-    char* extract_word(const char* str,int n);
-    char* next_word(char* w);
 
     void free_index(w_index* pa);
     void print_index(w_index* pa);

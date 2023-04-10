@@ -33,95 +33,6 @@ bool verif(const char* mot){
     return true;
 }
 
-int nbr_words(const char* a){
-    if(verif(a)){
-        int res=0;
-        assert(a!=NULL);
-            if(*a=='/'){
-                for(const char* ind=a+1; *(ind) !='\0'; ++ind){
-                    if((*(ind)!='/'&&*(ind+1)=='/') || (*(ind)!='/' && *(ind+1)=='\0')){
-                        res++;
-                    }
-                }
-            }
-            else{
-                for(const char* ind=a; *(ind) !='\0'; ++ind){
-                     if((*(ind)!='/'&&*(ind+1)=='/') || (*(ind)!='/' && *(ind+1)=='\0')){
-                        res++;
-                    }
-                }
-            }
-            return res;
-    }
-    else{return -1000;}
-}
-
-//Longuer d'un mot avant le prochain /
-int word_len(const char* w){
-    assert(w!=NULL);
-    int res=0;
-    if(*w=='/'){
-        for(const char* parc=w+1;*(parc)!='/';++parc){
-            res++;
-            if(*(parc+1)=='\0')break;
-        }
-    }
-    else{
-        for(const char* parc=w;*(parc)!='/';++parc){
-            res++;
-            if(*(parc+1)=='\0')break;
-        }
-    }
-    return res;
-}
-
-//Extraire un mot à partir d'une position
-char* extract_word(const char* str,int n){
-    if(str==NULL){
-        printf("\033[1;31m (Gestion de texte) Extract_Word Syntaxe Invalide !! \033[0m \n");
-        exit(1);
-    }
-    if(verif(str)){
-        if(*str!='/'){
-            int x=word_len(str);
-            char* res=malloc(sizeof(char)*x+1);
-            assert(res!=NULL);
-            memmove(res,str,sizeof(char)*x);
-            *(res+x)='\0';
-            return res;
-        }
-        else{
-            int x=word_len(str+1);
-            char* res=malloc(sizeof(char)*x+1);
-            assert(res!=NULL);
-            memmove(res,str+1,sizeof(char)*x);
-            *(res+x)='\0';
-            return res;
-        }
-    }
-    else{
-        printf(" Erreur dans le mot depuis extract Word");
-        exit(1);
-        return NULL;
-    }   
-}
-
-//Chercher le prochain mot en fonnction de critère 
-char* next_word(char* w){
-    assert(w!=NULL);
-    if(*w=='/'){
-        return w+1;
-    }
-    else{
-        for(char* x=w;*x!='\0';++x){
-            if(*x=='/'){
-                return x+1;
-            } 
-        }
-    }
-    return NULL;
-}
-
 void free_index(w_index* pa){
     assert(pa!=NULL);
     for(int i=0; i<pa->nbr;++i){
@@ -147,29 +58,31 @@ int size_words(w_index* pa){
     return x;
 }
 
-w_index* cons_index(char* s){
-    int valLen=nbr_words(s), x=0 , cons=0;
-    w_index* res=malloc(sizeof(w_index));
-    res->nbr=valLen;
-    res->words=malloc(sizeof(char*)*valLen); 
-   
-    char* save=s; 
-    for(int i=0; i<valLen; ++i){
-        save=extract_word(save,cons);
-        
-        // Ne pas oublier le caractere \0
-        x+=strlen(save);
-      
-        int y=x;
-        res->words[i]=malloc(sizeof(char)*strlen(save)+1);
-        //Compléter chaque case
-        for(int j=0; j<y; ++j){
-            res->words[i][j]=save[j];
+w_index* cons_index(char* str){
+    w_index* index=malloc(sizeof(w_index));
+    int i = 0;
+    char* token;
+
+    // Calculer le nombre de mots
+    index->nbr = 1;
+    for (i = 1; i < strlen(str); i++) {
+        if (str[i] == '/') {
+            index->nbr++;
         }
-        res->words[i][strlen(save)]='\0';
-      
-        //Voir le prochain mot
-        save=next_word((s+x));
     }
-    return res;
+
+    // Allouer de la mémoire pour les mots
+    index->words = (char**)malloc(index->nbr * sizeof(char*));
+
+    // Extraire les mots
+    i = 0;
+    token = strtok(str, "/");
+    while (token != NULL) {
+        index->words[i] = (char*)malloc(strlen(token) + 1);
+        strcpy(index->words[i], token);
+        token = strtok(NULL, "/");
+        i++;
+    }
+
+    return index;
 }

@@ -10,7 +10,6 @@
 
 void ls(noeud* n){
     assert(n!=NULL);
-    printf("\033[35m");
     if(n->est_dossier==true){
         if(n->fils==NULL){
             printf("__");
@@ -19,10 +18,13 @@ void ls(noeud* n){
             liste_noeud* li=n->fils;
             if(li!=NULL){
                 while(li->succ != NULL && validiteNoeud(li->no)==true){
-                    printf("%s ",li->no->nom);
+                    if(li->no->est_dossier) printf("\033[35m%s \033[0m",li->no->nom);
+                    else printf("%s ",li->no->nom);
                     li=li->succ;
                 }
-                printf("%s ",li->no->nom);
+               if(li->no->est_dossier) printf("\033[35m%s \033[0m",li->no->nom);
+               else printf("%s",li->no->nom);
+                    
             }
         }
     }
@@ -30,7 +32,7 @@ void ls(noeud* n){
         printf(" On n'est pas dans un dossier il y a eu un deplacement inattendu!");
         exit(EXIT_FAILURE);
     }
-    printf("\033[0m\n");
+    printf("\n");
 }
 
 //Deplacement de chem normalement seulement dans un dossier
@@ -269,8 +271,7 @@ void rm(noeud* n,char* chem){
     // La manière dont j'ai imaginé est de verifier en premier la cohérence du chemin 
     // Ensuite on va vérifier que c'est un chemin ou notre noeud n'est pas situé 
     
-
-    if(chemin_existe(n,chem)==1){
+    if(chemin_existe(n,chem)==true){
         //printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné est correct \033[0m ");
         //On va maintenant se déplacer vers ce chemin via un cd 
         noeud* dep=deplacementCalculer(n,chem);
@@ -301,15 +302,15 @@ void cp(noeud* n,char* chem1,char* chem2){
 
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
     if(chemin_existe(n,chem1)==1){
-        printf("\033[34m l 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
+        //printf("\033[34m l 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
         noeud* dep = cpVerif1(n,chem1);
         assert(dep!=NULL);
-        printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
+        //printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
         
         cpVerif2(dep,n,chem2);
     }
     else{
-        printf("\033[31m l 343 : Erreur de chemin dans cp \033[0m\n");
+        //printf("\033[31m l 343 : Erreur de chemin dans cp \033[0m\n");
         exit(1);
     }
 }
