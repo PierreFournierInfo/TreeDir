@@ -11,12 +11,11 @@
 noeud* courant;
 
 int main() {
-
+   courant=creationDebut();
+   
     char input[200];
     char name[30], arg[100];
 
-   courant=creationDebut();
-    
     while (1) {
         printf("\033[34m");
         printf("~");
@@ -52,15 +51,24 @@ int main() {
             printf("La fonction '%s' n'existe pas\n", name);
         }
     }
-
-    /*
-    rm(courant,"/Td/Anglais");
+    
+    mkdir(courant,"Cours");
+    courant=cd(courant,"Cours");
+    mkdir(courant,"ProjetC");
+    mkdir(courant,"Anglais");
+    courant=cd(courant,"..");
+    cp(courant,"Cours","/Td");
+    print(courant);
+     
+    rm(courant,"Td/Anglais");
+    w_index* test=cons_index("/Td");
+    print_index(test);
     print(courant);
     courant=cd(courant,"Td");
     mkdir(courant,"td1");
     mkdir(courant,"td2");
     print(courant);
-    */
+
     return 0;
 }
 

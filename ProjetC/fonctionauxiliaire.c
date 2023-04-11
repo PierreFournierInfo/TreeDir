@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include "gestiontexte.h"
 #include "fonctionauxiliaire.h"
+#include "debug.h"
 
 // Creation de la racine
 noeud* creationDebut(){
@@ -44,7 +45,7 @@ noeud* ajoutL(noeud* courant, noeud* n){
     assert(courant!=NULL);
     assert(n!=NULL);
     if(courant != NULL && courant->fils !=NULL && n != NULL ){
-        //printf("\033[33mAjout Liste \033[0m\n");
+        if(DEBUG)printf("\033[33mAjout Liste \033[0m\n");
         if(courant->fils->succ==NULL){
             // Si le suivant est directement NULL
             liste_noeud* aj=malloc(sizeof(liste_noeud));
@@ -70,7 +71,7 @@ noeud* ajoutL(noeud* courant, noeud* n){
     }
     else{ 
         // Creation des fils de la liste
-        //printf("\n \033[33mAjout Liste 2 \033[0m\n");
+        if(DEBUG)printf("\n \033[33mAjout Liste 2 \033[0m\n");
         if(n != NULL){
             if(courant->fils==NULL){
                 //printf(" ==>Reussi l'ajout \n");
@@ -102,7 +103,7 @@ noeud* depCD(noeud* n, char* name){
             bool testList=false;
             w_index* chem=cons_index(name);
             assert(chem!=NULL);
-            //print_index(chem);
+            if(DEBUG)print_index(chem);
             for(int i=0;i<chem->nbr;++i){ // Boucle pour parcourir tous le chemin
                 //Recherche du Deplacement 
                 while(list != NULL && list->succ != NULL){
@@ -151,12 +152,12 @@ noeud* depCD(noeud* n, char* name){
             bool testList=false;
             w_index* chem=cons_index(name);
             assert(chem!=NULL);
-            //print_index(chem);
+            if(DEBUG)print_index(chem);
             for(int i=0; i<chem->nbr ;++i){ // Boucle pour parcourir tous le chemin
                 //Recherche du Deplacement 
                 while(list->succ != NULL){
                     //Verifier que c'est bien un dossier
-                    //printf(" %s , %s \n", list->no->nom,name);
+                    if(DEBUG)printf(" %s , %s \n", list->no->nom,name);
                     if(list->no->est_dossier==true){
                         if(list->no->est_dossier==true && strcmp(list->no->nom,chem->words[i])==0){
                             tmp=list->no;
@@ -237,8 +238,8 @@ bool verification_PresenceFils(noeud* n, liste_noeud* list){
     while(parc->succ != NULL){
         if(validiteNoeud(parc->no)){
             if(strcmp(parc->no->nom,n->nom)==0){
-            //printf(" VerificationPresenceFils : Verification par le fils présent directement \n");
-            //printf("%s , %s \n", parc->no->nom, n->nom);
+            if(DEBUG)printf(" VerificationPresenceFils : Verification par le fils présent directement \n");
+            if(DEBUG)printf("%s , %s \n", parc->no->nom, n->nom);
             return true;
             }
             if(parc->no->est_dossier){
@@ -246,7 +247,7 @@ bool verification_PresenceFils(noeud* n, liste_noeud* list){
                     // Verifier les sous dossiers ...
                     res=verification_PresenceFils(n,parc->no->fils);
                     if(res==true){
-                        //printf(" verificationPresenceFils : Vérification par les fils des élements dans la liste \n");
+                        if(DEBUG)printf(" verificationPresenceFils : Vérification par les fils des élements dans la liste \n");
                         return true;
                     }
                 }
@@ -318,7 +319,7 @@ noeud* cpVerif1(noeud* n,char*chem){
         }
         else{
             noeud* dep=depCD(n,chem);
-            //printf(" ==> l 607 - Description du Noeud dans cpVeriff1 \n");
+            if(DEBUG)printf(" ==> l 607 - Description du Noeud dans cpVeriff1 \n");
             assert(dep!=NULL);
             return dep;
         }
@@ -413,7 +414,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
         free_index(constructionChemin);
         if(!validiteNoeud(tmp)){
             printf("(else deplacementAuxiliaire2) IL y a un problème dans les liaisons \n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         return tmp;
     }
@@ -438,8 +439,8 @@ noeud* copy_noeud(noeud *src,char* chem,noeud* pere) {
         else dest->pere = pere;
     dest->racine = src->racine;
     dest->fils = NULL;
-    //printf("Copie\n");
-    //descriptionNoeud(dest);
+    if(DEBUG){printf("Copie\n");
+    descriptionNoeud(dest);}
     
     // Copie des enfants
     liste_noeud *src_child = src->fils;
@@ -465,6 +466,7 @@ noeud* copy_noeud(noeud *src,char* chem,noeud* pere) {
         
         // Passage à l'enfant suivant
         prev_child = src_child;
+        if(DEBUG)printf(" prev_child : %s",prev_child->no->nom);
         src_child = src_child->succ;
     }
     return dest;
@@ -492,15 +494,14 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
             li=li->succ;
         }
         noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
-        //memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
-        //printf(" NOM de la copie : %s \n", save->nom);
+        if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
             
         ajoutL(courant,save);
     }
     else{
         //Faire le deplacement vers l'avant dernier élément
         noeud* creation = deplacementAuxiliaireCp2(courant,chem);
-        printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
+        if(DEBUG)printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
         assert(creation != NULL);
 
         if(creation->est_dossier==true && 
@@ -508,8 +509,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
            verification_PresenceFils(creation,copie->fils)==0){
             
             noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
-            //memmove(save->nom,cheminParcour->words[cheminParcour->nbr-1],sizeof(char)*(strlen(cheminParcour->words[cheminParcour->nbr-1])+1));
-            //printf(" NOM de la copie : %s \n", save->nom);
+            if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
             
             ajoutL(creation,save);
             free_index(cheminParcour);   

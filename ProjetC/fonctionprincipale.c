@@ -7,13 +7,12 @@
 #include "gestiontexte.h"
 #include "fonctionauxiliaire.h"
 #include "fonctionprincipale.h"
+#include "debug.h"
 
 void ls(noeud* n){
     assert(n!=NULL);
     if(n->est_dossier==true){
-        if(n->fils==NULL){
-            printf("__");
-        }
+        if(n->fils==NULL) printf("__");
         else{
             liste_noeud* li=n->fils;
             if(li!=NULL){
@@ -23,13 +22,12 @@ void ls(noeud* n){
                     li=li->succ;
                 }
                if(li->no->est_dossier) printf("\033[35m%s \033[0m",li->no->nom);
-               else printf("%s",li->no->nom);
-                    
+               else printf("%s",li->no->nom);     
             }
         }
     }
     else{
-        printf(" On n'est pas dans un dossier il y a eu un deplacement inattendu!");
+        printf("\033[31mOn n'est pas dans un dossier il y a eu un deplacement inattendu!\033[0m");
         exit(EXIT_FAILURE);
     }
     printf("\n");
@@ -41,18 +39,18 @@ noeud* cd(noeud* n,char* name){
    assert(name!=NULL);
    //TRAITER LE CAS DU RETOUR A LA RACINE
    if(strcmp(name,"")==0){
-    //printf("\n---Retour à la racine avec CD \n ");
-    n=n->racine;
-     return n;
+        if(DEBUG)printf("\n---Retour à la racine avec CD \n ");
+        n=n->racine;
+        return n;
    }
    else if(verif(name)==1){
         //Traiter le cas du RETOUR
         if(strcmp(name,"..")==0){
-            //printf("\nRetour Direct \n");
+            if(DEBUG)printf("\nRetour Direct \n");
             assert(n->pere!=NULL);
             assert(n->pere->nom!=NULL);
             if(strcmp(n->pere->nom,"")!=0){
-                //printf("> Retour pere possible\n");
+                if(DEBUG)printf("> Retour pere possible\n");
                 n=n->pere;
             }
             return n;
@@ -62,8 +60,8 @@ noeud* cd(noeud* n,char* name){
         }
    }
    else{
-    printf(">cd:Il y a une erreur dans le chemin qui est donné !! ");
-    exit(1);
+    printf("\033[31m>cd:Il y a une erreur dans le chemin qui est donné !! \033[0m");
+    exit(EXIT_FAILURE);
    }
 }
 
@@ -71,7 +69,7 @@ noeud* cd(noeud* n,char* name){
 void pwd(noeud* n){ // Probleme de sens inverse à régler
     assert(n!=NULL);
     if(!validiteNoeud(n)){ 
-        printf("\033[33m pwd : Il y a des problèmes de liaisons \033[0m");
+        printf("\033[31m pwd : Il y a des problèmes de liaisons \033[0m");
         exit(EXIT_FAILURE);
     }
    if(strcmp(n->racine->nom,n->nom)==0){
@@ -152,7 +150,7 @@ void touch(noeud* no,char* nom){
     if(no->est_dossier){
         // Ajouter directement au debut 
         if(no->fils==NULL){
-            //printf(" Parcour de TOUCH direct \n");
+            if(DEBUG)printf(" Parcour de TOUCH direct \n");
             liste_noeud* list=malloc(sizeof(liste_noeud));
             list->succ=NULL;
             noeud* li=malloc(sizeof(noeud));
@@ -194,7 +192,7 @@ void touch(noeud* no,char* nom){
 }
 
 //Print
-void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
+void print(noeud* n){ 
     if(n==NULL){
         printf("\031[31m Le noeud à décrire est NULL \033[0m\n");
         return ;
@@ -203,7 +201,7 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
     assert(parc!=NULL);
     liste_noeud* save = n->fils;
     
-    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"")!=0
+    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"") !=0
        && save->no->pere != NULL && save->no->racine != NULL){
         if(strcmp(parc->nom,parc->pere->nom)==0){
             printf("Noeud %s , %d fils: ",parc->nom,nbFils(parc));
@@ -245,7 +243,7 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
         }
     }
     else{
-        //printf("fils null \n");
+        if(DEBUG)printf("fils null \n");
         if(strcmp(n->nom,n->pere->nom)==0){
             printf("Noeud: %s ", n->nom);
             if(n->est_dossier==true){
@@ -268,22 +266,22 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
 }
 
 void rm(noeud* n,char* chem){
-    // La manière dont j'ai imaginé est de verifier en premier la cohérence du chemin 
-    // Ensuite on va vérifier que c'est un chemin ou notre noeud n'est pas situé 
-    if(strlen(chem)==2 && strcmp(chem,"..")==0 || strcmp(chem,"")==0){
+    
+    if((strlen(chem)==2 && strcmp(chem,"..")==0) || strcmp(chem,"")==0){
         printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné n'est pas correct \n\033[0m ");
         exit(EXIT_FAILURE);
     }
     if(verif(chem)){
         //On va maintenant se déplacer vers ce chemin via un cd 
+        
         noeud* dep=depCD(n,chem);
         assert(dep!=NULL);
-
+        
         //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
         if(verification_PresenceFils(n,dep->fils)==0 && dep != n){
             
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
-            //printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
+            if(DEBUG) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
             suppression(dep->pere,dep);
         }
         else{
@@ -302,15 +300,15 @@ void cp(noeud* n,char* chem1,char* chem2){
 
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
     if(verif(chem1)==true){
-        //printf("\033[34m l 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
+        if(DEBUG)printf("\033[34m l 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
         noeud* dep = cpVerif1(n,chem1);
         assert(dep!=NULL);
-        //printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
+        if(DEBUG)printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
         
         cpVerif2(dep,n,chem2);
     }
     else{
-        //printf("\033[31m l 343 : Erreur de chemin dans cp \033[0m\n");
+        if(DEBUG)printf("\033[31m l 343 : Erreur de chemin dans cp \033[0m\n");
         exit(1);
     }
 }

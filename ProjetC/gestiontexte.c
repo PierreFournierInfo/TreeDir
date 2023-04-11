@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include "gestiontexte.h"
+#include "debug.h"
+
 
 //------------------ Des methodes auxiliaires pour gérer des taches repetitives ---------------------------------------------------
 //Verifier la coherence du mot donné
@@ -62,8 +64,7 @@ w_index* cons_index(char* str){
     if(verif(str)==true){
     w_index* index=malloc(sizeof(w_index));
     int i = 0;
-    char* token ;
-
+    
     // Calculer le nombre de mots
     index->nbr = 1;
     
@@ -78,12 +79,16 @@ w_index* cons_index(char* str){
 
     // Extraire les mots
     i = 0;
-    token = strtok(str, "/");
+    // copie de la chaine pour ne pas modifier str
+    char *temp=malloc((strlen(str)+1)*sizeof(char));
+    assert(temp!=NULL);
+    strcpy(temp,str);
+    char* token = strtok(temp, "/");
     assert(token!=NULL);
     while (token != NULL) {
         index->words[i] = malloc(strlen(token) + 1);
         strcpy(index->words[i], token);
-        //printf("res :  %s \n",index->words[i]);
+        if(DEBUG)printf("res :  %s \n",index->words[i]);
         token = strtok(NULL, "/");
         ++i;
     }
