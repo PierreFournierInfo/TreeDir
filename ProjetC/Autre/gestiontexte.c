@@ -59,38 +59,46 @@ int size_words(w_index* pa){
 }
 
 w_index* cons_index(char* str){
-    if(verif(str)==true){
     w_index* index=malloc(sizeof(w_index));
     int i = 0;
-    char* token ;
+    char* token ="";
 
     // Calculer le nombre de mots
     index->nbr = 1;
-    
     for (i = 1; str[i]!='\0'; ++i) {
+        printf("%c\n", str[i]);
         if (str[i] == '/') {
             index->nbr++;
         }
     }
-    
+    printf(" nbr : %d \n",index->nbr);
+
     //Allouer de la mémoire pour les mots
     index->words = malloc(index->nbr * sizeof(char*));
 
     // Extraire les mots
     i = 0;
-    token = strtok(str, "/");
+    if(*str=='/'){
+        token = strtok(str+1, "/");
+    }
+    else{
+        token = strtok(str, "/");
+    }
     assert(token!=NULL);
     while (token != NULL) {
         index->words[i] = malloc(strlen(token) + 1);
         strcpy(index->words[i], token);
-        //printf("res :  %s \n",index->words[i]);
+        //printf("res :  %s \n",token);
         token = strtok(NULL, "/");
         ++i;
     }
+
     return index;
-    }
-    else{
-        printf(" Erreur dans le chemin \n");
-        exit(EXIT_FAILURE);
-    }
+}
+
+int main(){
+    w_index* test=cons_index("a/b/c/d/e/f");
+   print_index(test);
+
+    return 0;
 }

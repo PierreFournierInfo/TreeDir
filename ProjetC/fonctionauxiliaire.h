@@ -22,12 +22,9 @@
 
     noeud* depCD(noeud* n, char* name);
     int nbFils(noeud* n);
-    noeud* deplacementCalculer(noeud* n, char* chem);
     bool verification_PresenceFils(noeud* n, liste_noeud* list);
-    bool chemin_existe(noeud* n,char* chem);
     void suppression(noeud* pred,noeud* n);
-    void liberation_noeud(noeud* n,char* chem);
-
+    
     noeud* cpVerif1(noeud* n,char*chem);
     noeud* copy_noeud(noeud *src,char* chem,noeud* nomPere);
     void cpVerif2(noeud* copie,noeud* courant,char* chem);

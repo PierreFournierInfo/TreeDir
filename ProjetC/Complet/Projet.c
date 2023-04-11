@@ -365,7 +365,7 @@ noeud* depCD(noeud* n, char* name){
             w_index* chem=cons_index(name);
             assert(chem!=NULL);
 
-            //print_index(chem);
+            print_index(chem);
             for(int i=0; i<chem->nbr ;++i){ // Boucle pour parcourir tous le chemin
                 //Recherche du Deplacement 
                 while(list->succ != NULL){
@@ -951,6 +951,7 @@ void liberation_noeud(noeud* n,char* chem){
    assert(chem!=NULL);
    
    w_index* index_Chem=cons_index(chem);
+   //print_index(index_Chem);
    if(*chem=='/'){
     printf("l 863 : liberation_noeud: racine \n");
     

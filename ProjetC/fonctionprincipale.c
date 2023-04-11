@@ -270,21 +270,21 @@ void print(noeud* n){ // IL y a un probleme quand on ne part pas de la racine
 void rm(noeud* n,char* chem){
     // La manière dont j'ai imaginé est de verifier en premier la cohérence du chemin 
     // Ensuite on va vérifier que c'est un chemin ou notre noeud n'est pas situé 
-    
-    if(chemin_existe(n,chem)==true){
-        //printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné est correct \033[0m ");
+    if(strlen(chem)==2 && strcmp(chem,"..")==0 || strcmp(chem,"")==0){
+        printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné n'est pas correct \n\033[0m ");
+        exit(EXIT_FAILURE);
+    }
+    if(verif(chem)){
         //On va maintenant se déplacer vers ce chemin via un cd 
-        noeud* dep=deplacementCalculer(n,chem);
+        noeud* dep=depCD(n,chem);
         assert(dep!=NULL);
 
         //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
-        if(verification_PresenceFils(n,dep->fils)==0){
-            //printf("\n \033[34ml 281 - rm: Ce chemin n'est pas sur le noeud courant où on est situé \033[0m ");
+        if(verification_PresenceFils(n,dep->fils)==0 && dep != n){
             
-            //Utiliser une fonction auxiliaire de libération de la mémoire
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
-            //printf("\n \033[34ml 285 - rm : liberation des noeuds \033[0m \n");
-            liberation_noeud(n,chem);
+            //printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
+            suppression(dep->pere,dep);
         }
         else{
             printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
@@ -301,7 +301,7 @@ void rm(noeud* n,char* chem){
 void cp(noeud* n,char* chem1,char* chem2){
 
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
-    if(chemin_existe(n,chem1)==1){
+    if(verif(chem1)==true){
         //printf("\033[34m l 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
         noeud* dep = cpVerif1(n,chem1);
         assert(dep!=NULL);

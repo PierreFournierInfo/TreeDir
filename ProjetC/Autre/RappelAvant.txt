@@ -1,0 +1,169 @@
+// Fonction auxiliaire pour supprimer tous les fils du noeud et le noeud lui meme
+void liberation_noeud(noeud* n,char* chem){
+   assert(n!=NULL);
+   assert(chem!=NULL);
+   
+   bool entre=false;
+   w_index* index_Chem=cons_index(chem);
+   //print_index(index_Chem);
+   if(*chem=='/'){
+    noeud* pred=NULL;
+    noeud* parc=n->racine;
+    
+    liste_noeud* list=parc->fils;
+    liste_noeud* li_Pred=NULL;
+
+    // ---------------------- REMARQUE -------------------------------------------
+    //Commencer à l'indice 0 si on prend pas en compte le nom de la racine
+    for(int i=0;i<index_Chem->nbr;++i){
+         while(list->succ != NULL && validiteNoeud(list->no)){
+            if(strcmp(index_Chem->words[i],list->no->nom)==0){
+                pred=parc;
+                parc=list->no;
+                li_Pred=list;
+                list=parc->fils;
+                entre=true;
+                break; 
+            }
+            li_Pred=list;
+            list=list->succ;
+        }
+        //Le dernier élément non null
+        if(!entre){
+            if(strcmp(list->no->nom,index_Chem->words[i])==0){
+            pred=parc;
+            parc=list->no;
+
+            li_Pred=list;
+            list=parc->fils;
+            }
+            else{
+                printf("\033[31ml 530 : Liberation noeud (if->else): il y a une erreur\033[0m\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        entre=false;
+    }
+
+    //printf("\nl 537 : Libération noeud : description du noeud à supprimer \n");
+    printf("->courant: %s \n",parc->nom);
+    if(pred!=NULL )printf("->pred : %s \n",pred->nom);
+    else pred=parc->pere;
+    //if(list!=NULL ) printf("Liste courante : %s \n", list->no->nom);
+    //if(li_Pred!=NULL) printf("Liste pred : %s \n" ,li_Pred->no->nom);
+
+   // Maintenant on peut supprimer tous les fils
+   suppression(pred,parc);   
+   }
+   else{
+    noeud* pred=NULL;
+    noeud* parc=n;
+    
+    liste_noeud* li_Pred=NULL;
+    liste_noeud* list=parc->fils;
+     for(int i=0;i<index_Chem->nbr;++i){
+        while(list->succ != NULL && validiteNoeud(list->no)){
+            if(strcmp(index_Chem->words[i],list->no->nom)==0){
+                pred=parc;
+                parc=list->no;
+                li_Pred=list;
+                list=parc->fils;
+                entre=true;
+                break; 
+            }
+            li_Pred=list;
+            list=list->succ;
+        }
+        //Le dernier élément non null
+        if(!entre){
+            if(strcmp(list->no->nom,index_Chem->words[i])==0){
+            pred=parc;
+            parc=list->no;
+
+            li_Pred=list;
+            list=parc->fils;
+            }
+            else{
+                printf("l 576 : Liberation noeud (else->else): il y a une erreur \n");
+                exit(1);
+            }
+        }
+        entre=false;
+    }
+
+     //printf("l 582 : Libération noeud : description du noeud à supprimer \n");
+     printf("parc : %s\n",parc->nom);
+     if(pred!=NULL )printf("->pred : %s \n",pred->nom);
+     else pred=parc->pere;
+     //if(list!=NULL ) printf("Liste courante : %s \n", list->no->nom);
+     //if(li_Pred!=NULL) printf("Liste pred : %s \n" ,li_Pred->no->nom);
+
+     // Maintenant on peut supprimer tous les fils
+     suppression(pred,parc);
+   }
+}
+
+// Suppression noeud Avant
+ /*
+    bool verifFin=false;
+    // Mettre le fils à NULL si on n'a qu'un seul élément
+    if(pred != NULL && pred->fils->succ==NULL){
+       verifFin=true;
+    }
+
+    // Délier 
+    if(pred != NULL ){
+        liste_noeud* precedent=NULL;
+        liste_noeud* courant=pred->fils;
+        liste_noeud* suivant=pred->fils->succ;
+        
+        while(courant->no!=n && suivant!=NULL){
+            precedent=courant;
+            courant=suivant;
+            suivant=suivant->succ;
+        }
+        if(courant != NULL && courant->no==n){
+            if(precedent!=NULL){
+                precedent->succ=suivant;     
+            }
+            else{
+                // Le noeud actuel n'est pas celui recherché
+                if(courant != pred->fils){
+                    precedent=courant;
+                    precedent->succ=suivant;    
+                }
+                // Directement le noeud recherché
+                else{
+                    pred->fils=pred->fils->succ;
+                }
+            }
+        }
+    }
+    
+    // Libérer
+    if(n!=NULL){
+        if(n->fils!=NULL && n->fils->succ == NULL){
+            //printf("l 486 : suppression un seul élément \n");
+            free(n);
+        } 
+        else if(n->fils==NULL){
+            //printf("l 486 : suppression un seul élément \n");
+            free(n);
+        }
+        else{
+            //printf("l 490 : suppression: plusieurs élément \n");
+            liste_noeud* list=n->fils;
+            while(list != NULL){
+                liste_noeud* tmp1 = list->succ;
+                suppression(NULL,list->no);
+                list=tmp1;
+            }
+            free(n);
+        }
+    }
+
+    // Le cas ou on va supprimer le seul élément
+    if(verifFin){
+        pred->fils=NULL;
+    }
+    */
