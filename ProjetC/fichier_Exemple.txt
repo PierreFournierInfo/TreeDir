@@ -1,1 +1,2 @@
-ls 
+ls cd mkdir touch mkdir cd
+bonjour carotte abricot
