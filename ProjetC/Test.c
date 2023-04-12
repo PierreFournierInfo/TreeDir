@@ -10,24 +10,8 @@
 
 noeud* courant;
 
-int main() {
-   courant=creationDebut();
-   
-    char input[200];
-    char name[30], arg[100];
-
-    while (1) {
-        printf("\033[34m");
-        printf("~");
-        pwd(courant);
-        printf("\033[0m\n");
-        printf("> ");
-        fflush(stdout);
-        fgets(input, 100, stdin);
-        sscanf(input, "%s %s", name, arg);
-
+void appliquerCommande(char* name, char* arg){
         if (strcmp(name, "quit") == 0) {
-            break;
         }else if (strcmp(name, "ls") == 0) {
             ls(courant);
         } else if (strcmp(name, "pwd") == 0) {
@@ -50,26 +34,39 @@ int main() {
         }else {
             printf("La fonction '%s' n'existe pas\n", name);
         }
-    }
-    
-    mkdir(courant,"Cours");
-    courant=cd(courant,"Cours");
-    mkdir(courant,"ProjetC");
-    mkdir(courant,"Anglais");
-    courant=cd(courant,"..");
-    cp(courant,"Cours","/Td");
-    print(courant);
-     
-    rm(courant,"Td/Anglais");
-    w_index* test=cons_index("/Td");
-    print_index(test);
-    print(courant);
-    courant=cd(courant,"Td");
-    mkdir(courant,"td1");
-    mkdir(courant,"td2");
-    print(courant);
 
-    return 0;
+}
+
+int main(){
+  FILE *flux=fopen("fichier_Exemple.txt","r");
+  if(flux==NULL){
+    perror("Probleme ouverture de fichier");
+    exit(EXIT_FAILURE);
+  }
+  int r=0;
+  int cour=0;
+  int dec=0;
+  int i=0;
+  char *st="bonjour";
+  while((i=fgetc(flux))!="EOF"){
+    if(i!=' '){
+      ++dec;
+    }else{
+      r=fseek(flux,cour,SEEK_SET);
+      assert(r==0);
+      st=malloc(sizeof(char)*(dec+2));
+      char *st2=fgets(st,dec+2,flux);
+      assert(st2!=NULL);
+      appliquercommande(st);
+      free(st);
+      cour=cour+dec+1;
+      dec=0;
+    }
+  }
+  r=fclose(flux);
+  if(r!=0){
+    perror("Probleme fermeture de fichier");
+  } 
 }
 
 
