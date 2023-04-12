@@ -1,2 +1,7 @@
-ls cd mkdir touch mkdir cd
-bonjour carotte abricot
+print
+ls
+mkdir Cours
+ls
+cd Cours
+ls
+print

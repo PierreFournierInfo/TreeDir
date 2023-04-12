@@ -99,3 +99,38 @@ w_index* cons_index(char* str){
         exit(EXIT_FAILURE);
     }
 }
+
+
+w_index* mot(char* str){
+    w_index* index=malloc(sizeof(w_index));
+    int i = 0;
+    
+    // Calculer le nombre de mots
+    index->nbr = 1;
+    
+    for (i = 1; str[i]!='\0'; ++i) {
+        if (str[i] == '/') {
+            index->nbr++;
+        }
+    }
+    
+    //Allouer de la mémoire pour les mots
+    index->words = malloc(index->nbr * sizeof(char*));
+
+    // Extraire les mots
+    i = 0;
+    // copie de la chaine pour ne pas modifier str
+    char *temp=malloc((strlen(str)+1)*sizeof(char));
+    assert(temp!=NULL);
+    strcpy(temp,str);
+    char* token = strtok(temp," ");
+    assert(token!=NULL);
+    while (token != NULL) {
+        index->words[i] = malloc(strlen(token) + 1);
+        strcpy(index->words[i], token);
+        if(DEBUG)printf("res :  %s \n",index->words[i]);
+        token = strtok(NULL, " ");
+        ++i;
+    }
+    return index;
+}

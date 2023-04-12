@@ -13,4 +13,6 @@
     int size_words(w_index* pa);
 
     w_index* cons_index(char* s);
+    w_index* mot(char* s);
+    
 #endif
