@@ -92,6 +92,7 @@ w_index* cons_index(char* str){
         token = strtok(NULL, "/");
         ++i;
     }
+    free(temp);
     return index;
     }
     else{

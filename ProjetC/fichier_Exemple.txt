@@ -1,6 +1,4 @@
-print
-ls
-mkdir Cours
+kdir Cours
 ls
 cd Cours
 ls

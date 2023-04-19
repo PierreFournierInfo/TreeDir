@@ -95,8 +95,8 @@ noeud* depCD(noeud* n, char* name){
             assert(n->racine->fils!=NULL);
             
             // Sauvegarde du pere
-            noeud* tmpPere = malloc(sizeof(noeud));
-            assert(tmpPere!=NULL);
+            //noeud* tmpPere = malloc(sizeof(noeud));
+            //assert(tmpPere!=NULL);
             
             noeud* tmp=n->racine;
             liste_noeud* list=n->racine->fils;
@@ -145,8 +145,8 @@ noeud* depCD(noeud* n, char* name){
             noeud* tmp=n;
 
             // Sauvegarde du pere
-            noeud* tmpPere = malloc(sizeof(noeud));
-            assert(tmpPere!=NULL);
+            //noeud* tmpPere = malloc(sizeof(noeud));
+            //assert(tmpPere!=NULL);
 
             liste_noeud* list=n->fils;
             bool testList=false;
@@ -162,13 +162,13 @@ noeud* depCD(noeud* n, char* name){
                         if(list->no->est_dossier==true && strcmp(list->no->nom,chem->words[i])==0){
                             tmp=list->no;
                             testList=true;
-                            if(list->no->pere != NULL){
-                                tmpPere=list->no->pere;
-                            }
-                            else{
+                            //if(list->no->pere != NULL){
+                            //    tmpPere=list->no->pere;
+                            //}
+                            //else{
                                 printf("\033[33m (depCD else 165) Erreur dans les deplacement internes \033[0m\n");
                                 exit(EXIT_FAILURE);
-                            }
+                            //}
                             list=tmp->fils;
                             break;
                         }
@@ -178,14 +178,14 @@ noeud* depCD(noeud* n, char* name){
                         assert(list->no != NULL);
                         if(list->no->pere == NULL){
                             printf("\033[33m Ce noeud : %s n'a pas de pere \033[0m\n", list->no->nom);
-                            list->no->pere=tmpPere;
+                            //list->no->pere=tmpPere;
                             //exit(1);
                         }
                     }
                     // Sauvegarde dup pere au cas ou il y a une erreur à corriger plus tard
-                    if(list->no->pere!=NULL){
-                        tmpPere=list->no->pere;
-                    }
+                    //if(list->no->pere!=NULL){
+                    //    tmpPere=list->no->pere;
+                    //}
                 }
                 //Verifier la derniere adresse si on n'a toujours pas trouve le chemin parmi les fils
                 if(!testList){
@@ -300,7 +300,7 @@ void suppression(noeud* pere,noeud* noeud_a_supprimer){
     while (noeud_a_supprimer->fils != NULL) {
         liste_noeud* liste_a_supprimer = noeud_a_supprimer->fils;
         noeud_a_supprimer->fils = liste_a_supprimer->succ;
-        free(liste_a_supprimer);
+        //free(liste_a_supprimer);
     }
 
     // Délier le noeud à supprimer de son père et libérer la mémoire allouée pour le noeud
