@@ -1,11 +1,9 @@
-kdir Cours
-ls
+mkdir Cours
 cd Cours
-ls
-print
 mkdir ProjetC
 mkdir Anglais
 racine
+touch edt
 print
 cp Cours /Td
 rm /Td/ProjetC
@@ -15,4 +13,5 @@ mkdir td1
 mkdir td2
 cp /Cours/ProjetC CopieProjet
 racine
+ls
 print

@@ -297,7 +297,6 @@ void rm(noeud* n,char* chem){
 
 //Copie de chemin dans un dossier
 void cp(noeud* n,char* chem1,char* chem2){
-
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
     if(verif(chem1)==true){
         if(DEBUG)printf("\033[34ml 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
@@ -316,5 +315,6 @@ void cp(noeud* n,char* chem1,char* chem2){
 
 //Faire des déplacements pour des suppressions
 void mv(noeud* n,char* chem1,char* chem2){
-    // Pour bien faire mv il faut etre sur que cp et rm fonctionne bien
+    cp(n,chem1,chem2);
+    rm(n,chem1);
 }

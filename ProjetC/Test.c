@@ -19,7 +19,7 @@ char* remove_newline(char* str) {
 }
 
 void lire_fichier(char* nom_fichier){
-    FILE* fichier = fopen("fichier_Exemple.txt", "r");
+    FILE* fichier = fopen(nom_fichier, "r");
     if (fichier == NULL){
         printf("Impossible d'ouvrir le fichier %s\n", nom_fichier);
         return;
@@ -55,8 +55,14 @@ void lire_fichier(char* nom_fichier){
             printf("cp %s",mot2);
             char* mot3 = strtok(NULL,"\n");
             printf(" arg2 : %s\n",mot3);
-            cp(courant,remove_newline(mot2),mot3);
-        }else {
+            cp(courant,remove_newline(mot2),remove_newline(mot3));
+        }else if (strcmp(remove_newline(mot1), "mv") == 0) {
+            printf("mv %s",mot2);
+            char* mot3 = strtok(NULL,"\n");
+            printf(" arg2 : %s\n",mot3);
+            mv(courant,remove_newline(mot2),mot3);
+        }
+        else {
             printf("La fonction '%s' n'existe pas\n", mot1);
         }
     }
@@ -66,6 +72,6 @@ void lire_fichier(char* nom_fichier){
 
 int main(){
     courant=creationDebut();
-    lire_fichier("mon_fichier.txt");
+    lire_fichier("fichier_Exemple.txt");
     return 0;
 }

@@ -91,13 +91,14 @@ noeud* ajoutL(noeud* courant, noeud* n){
 // CD
 //!Faire une fonction auxiliaire pour le deplacement dans un fichier
 noeud* depCD(noeud* n, char* name){
+    if(DEBUG) printf(" NOM du chem de deplacement  : %s\n",name);
     if(*name == '/'){
             assert(n->racine->fils!=NULL);
             
             // Sauvegarde du pere
             //noeud* tmpPere = malloc(sizeof(noeud));
             //assert(tmpPere!=NULL);
-            
+            if(DEBUG)printf("\033[33m Chemin racine direct \033[0m\n");
             noeud* tmp=n->racine;
             liste_noeud* list=n->racine->fils;
             bool testList=false;
@@ -166,8 +167,8 @@ noeud* depCD(noeud* n, char* name){
                             //    tmpPere=list->no->pere;
                             //}
                             //else{
-                                printf("\033[33m (depCD else 165) Erreur dans les deplacement internes \033[0m\n");
-                                exit(EXIT_FAILURE);
+                            //    printf("\033[33m (depCD else 170) Erreur dans les deplacement internes \033[0m\n");
+                            //    exit(EXIT_FAILURE);
                             //}
                             list=tmp->fils;
                             break;
@@ -179,7 +180,7 @@ noeud* depCD(noeud* n, char* name){
                         if(list->no->pere == NULL){
                             printf("\033[33m Ce noeud : %s n'a pas de pere \033[0m\n", list->no->nom);
                             //list->no->pere=tmpPere;
-                            //exit(1);
+                            exit(EXIT_FAILURE);
                         }
                     }
                     // Sauvegarde dup pere au cas ou il y a une erreur à corriger plus tard
@@ -344,8 +345,9 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
         assert(constructionChemin!=NULL);
         noeud* tmp=n->racine;
         liste_noeud* list=n->racine->fils;
+        if(DEBUG)print_index(constructionChemin);
         // A voir si on verifie le cas de deplacement avec nom à la racine
-        for(int i=1;i<constructionChemin->nbr-1;++i){ 
+        for(int i=0;i<constructionChemin->nbr-1;++i){ 
             while(list->succ!=NULL){
                 if(strcmp(list->no->nom,constructionChemin->words[i])==0){
                     tmp=list->no;
@@ -405,7 +407,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
                     }
                     else{
                         printf("deplacementCalculer : Il y a un problème dans le déplacement \n");
-                        exit(1);
+                        exit(EXIT_FAILURE);
                     }
             }
             testList=false;
@@ -475,7 +477,7 @@ noeud* copy_noeud(noeud *src,char* chem,noeud* pere) {
 // Fonction auxiliaire pour faire un deplacement avec la creation pour la copie
 void cpVerif2(noeud* copie,noeud* courant,char* chem){
     w_index* cheminParcour=cons_index(chem);
-
+    if(DEBUG)printf("cpVerif2 nombre d'indew à copier : %d\n",cheminParcour->nbr);
     //! Soit on va directement faire la copie, soit on va faire le depalcement puis la copie
     if(cheminParcour->nbr==1){
         liste_noeud* li = courant->fils;
@@ -497,6 +499,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
         if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
             
         ajoutL(courant,save);
+        free_index(cheminParcour);
     }
     else{
         //Faire le deplacement vers l'avant dernier élément
