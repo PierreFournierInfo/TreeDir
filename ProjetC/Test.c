@@ -66,12 +66,11 @@ void lire_fichier(char* nom_fichier){
             printf("La fonction '%s' n'existe pas\n", mot1);
         }
     }
-
     fclose(fichier);
 }
 
-int main(){
+int main(int argC,char* chaine[]){
     courant=creationDebut();
-    lire_fichier("fichier_Exemple.txt");
+    lire_fichier(chaine[1]);
     return 0;
 }

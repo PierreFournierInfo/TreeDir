@@ -273,19 +273,19 @@ void rm(noeud* n,char* chem){
     }
     if(verif(chem)){
         //On va maintenant se déplacer vers ce chemin via un cd 
-        
         noeud* dep=depCD(n,chem);
         assert(dep!=NULL);
         
         //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
         if(verification_PresenceFils(n,dep->fils)==0 && dep != n){
-            
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
             if(DEBUG) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
-            suppression(dep->pere,dep);
+            //suppression(dep->pere,dep);
+            free(dep);
         }
         else{
             printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
+            free(dep);
             exit(EXIT_FAILURE);
         }
     }
@@ -303,7 +303,6 @@ void cp(noeud* n,char* chem1,char* chem2){
         noeud* dep = cpVerif1(n,chem1);
         assert(dep!=NULL);
         if(DEBUG)printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
-        
         cpVerif2(dep,n,chem2);
     }
     else{
@@ -311,7 +310,6 @@ void cp(noeud* n,char* chem1,char* chem2){
         exit(1);
     }
 }
-
 
 //Faire des déplacements pour des suppressions
 void mv(noeud* n,char* chem1,char* chem2){

@@ -94,10 +94,7 @@ noeud* depCD(noeud* n, char* name){
     if(DEBUG) printf(" NOM du chem de deplacement  : %s\n",name);
     if(*name == '/'){
             assert(n->racine->fils!=NULL);
-            
-            // Sauvegarde du pere
-            //noeud* tmpPere = malloc(sizeof(noeud));
-            //assert(tmpPere!=NULL);
+         
             if(DEBUG)printf("\033[33m Chemin racine direct \033[0m\n");
             noeud* tmp=n->racine;
             liste_noeud* list=n->racine->fils;
@@ -132,7 +129,7 @@ noeud* depCD(noeud* n, char* name){
                 testList=false;
             }
             free_index(chem);
-
+            free(chem);
             //AFFECTATIONS DES ADRESSES n'a pas marché
             assert(tmp!=NULL);
             if(!validiteNoeud(tmp)){
@@ -144,11 +141,6 @@ noeud* depCD(noeud* n, char* name){
     else{
             assert(n->fils!=NULL);
             noeud* tmp=n;
-
-            // Sauvegarde du pere
-            //noeud* tmpPere = malloc(sizeof(noeud));
-            //assert(tmpPere!=NULL);
-
             liste_noeud* list=n->fils;
             bool testList=false;
             w_index* chem=cons_index(name);
@@ -163,13 +155,6 @@ noeud* depCD(noeud* n, char* name){
                         if(list->no->est_dossier==true && strcmp(list->no->nom,chem->words[i])==0){
                             tmp=list->no;
                             testList=true;
-                            //if(list->no->pere != NULL){
-                            //    tmpPere=list->no->pere;
-                            //}
-                            //else{
-                            //    printf("\033[33m (depCD else 170) Erreur dans les deplacement internes \033[0m\n");
-                            //    exit(EXIT_FAILURE);
-                            //}
                             list=tmp->fils;
                             break;
                         }
@@ -178,15 +163,11 @@ noeud* depCD(noeud* n, char* name){
                     if(!validiteNoeud(list->no)){
                         assert(list->no != NULL);
                         if(list->no->pere == NULL){
-                            printf("\033[33m Ce noeud : %s n'a pas de pere \033[0m\n", list->no->nom);
+                            if(DEBUG) printf("\033[33m Ce noeud : %s n'a pas de pere \033[0m\n", list->no->nom);
                             //list->no->pere=tmpPere;
                             exit(EXIT_FAILURE);
                         }
                     }
-                    // Sauvegarde dup pere au cas ou il y a une erreur à corriger plus tard
-                    //if(list->no->pere!=NULL){
-                    //    tmpPere=list->no->pere;
-                    //}
                 }
                 //Verifier la derniere adresse si on n'a toujours pas trouve le chemin parmi les fils
                 if(!testList){
@@ -203,6 +184,7 @@ noeud* depCD(noeud* n, char* name){
                 testList=false;
             }
             free_index(chem);
+            free(chem);
             assert(tmp!=NULL);
             if(!validiteNoeud(tmp)){
                 printf("\033[31m(else depCD 208 ) Il y a un problème dans la liaison des noeuds \033[0m\n");
@@ -298,13 +280,14 @@ void suppression(noeud* pere,noeud* noeud_a_supprimer){
     }
 
     // Libérer la mémoire allouée pour la liste de fils du noeud à supprimer
-    while (noeud_a_supprimer->fils != NULL) {
+    /*while (noeud_a_supprimer->fils != NULL) {
         liste_noeud* liste_a_supprimer = noeud_a_supprimer->fils;
         noeud_a_supprimer->fils = liste_a_supprimer->succ;
-        //free(liste_a_supprimer);
-    }
-
+        if(liste_a_supprimer != NULL) free(liste_a_supprimer);
+    }*/
+    
     // Délier le noeud à supprimer de son père et libérer la mémoire allouée pour le noeud
+    free(liste_courante);
     free(noeud_a_supprimer); 
 }
 
