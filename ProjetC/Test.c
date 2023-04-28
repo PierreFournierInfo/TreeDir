@@ -72,5 +72,9 @@ void lire_fichier(char* nom_fichier){
 int main(int argC,char* chaine[]){
     courant=creationDebut();
     lire_fichier(chaine[1]);
+    
+    w_index* a = cons_index("Creation/omt/n");
+    free_index(a);
+
     return 0;
 }
