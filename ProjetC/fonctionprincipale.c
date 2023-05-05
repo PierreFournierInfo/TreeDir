@@ -39,7 +39,7 @@ noeud* cd(noeud* n,char* name){
    assert(name!=NULL);
    //TRAITER LE CAS DU RETOUR A LA RACINE
    if(strcmp(name,"")==0){
-        if(DEBUG)printf("\n---Retour à la racine avec CD \n ");
+        if(DEBUG) printf("\n---Retour à la racine avec CD \n ");
         n=n->racine;
         return n;
    }
@@ -56,6 +56,7 @@ noeud* cd(noeud* n,char* name){
             return n;
         }
         else{
+            //return n;
             return depCD(n,name);
         }
    }

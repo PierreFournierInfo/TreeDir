@@ -129,7 +129,6 @@ noeud* depCD(noeud* n, char* name){
                 testList=false;
             }
             free_index(chem);
-            free(chem);
             //AFFECTATIONS DES ADRESSES n'a pas marché
             assert(tmp!=NULL);
             if(!validiteNoeud(tmp)){
@@ -150,7 +149,7 @@ noeud* depCD(noeud* n, char* name){
                 //Recherche du Deplacement 
                 while(list->succ != NULL){
                     //Verifier que c'est bien un dossier
-                    if(DEBUG)printf(" %s , %s \n", list->no->nom,name);
+                    if(DEBUG) printf(" %s , %s \n", list->no->nom,name);
                     if(list->no->est_dossier==true){
                         if(list->no->est_dossier==true && strcmp(list->no->nom,chem->words[i])==0){
                             tmp=list->no;
@@ -184,7 +183,6 @@ noeud* depCD(noeud* n, char* name){
                 testList=false;
             }
             free_index(chem);
-            free(chem);
             assert(tmp!=NULL);
             if(!validiteNoeud(tmp)){
                 printf("\033[31m(else depCD 208 ) Il y a un problème dans la liaison des noeuds \033[0m\n");
