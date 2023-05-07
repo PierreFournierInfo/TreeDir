@@ -40,6 +40,7 @@ void free_index(w_index* pa){
     for(int i=0; i<pa->nbr;++i){
         free(*(pa->words+i));
     }
+    free(pa->words);
     free(pa);
 }
 
