@@ -296,18 +296,18 @@ noeud* cpVerif1(noeud* n,char*chem){
     //printf("l 595 cp Verif1 %s \n ",chem);
     if(verif(chem)==true){
         if(strcmp(chem,"")==0 || strcmp(chem,"..")==0){
-            printf("l 598 - cpVerif1 : Le premier chemin de copie est incorrect");
+            printf("l 299 - cpVerif1 : Le premier chemin de copie est incorrect");
             exit(EXIT_FAILURE);
         }
         else{
             noeud* dep=depCD(n,chem);
-            if(DEBUG)printf(" ==> l 607 - Description du Noeud dans cpVeriff1 \n");
+            if(DEBUG) printf(" ==> l 304 - Description du Noeud dans cpVeriff1 \n");
             assert(dep!=NULL);
             return dep;
         }
     }
     else{
-        printf(" ==> l 614 - cpVerif1: il y a une erreur dans laformation du chemin \n");
+        printf(" ==> l 310 - cpVerif1: il y a une erreur dans laformation du chemin \n");
         exit(EXIT_FAILURE);
     }
 }
@@ -317,7 +317,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
     assert(n!=NULL);
     assert(chem!=NULL);
     if(verif(chem)==false || strcmp(chem,"")==0 || strcmp(chem,"..")==0){
-        printf("l 646 - deplacementCalculer : le chemin est faux \n");
+        printf("l 320 - deplacementCalculer : le chemin est faux \n");
         exit(EXIT_FAILURE);
     }
     if(*chem =='/'){
@@ -348,7 +348,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
                         }
                     }
                     else{
-                        printf("l 676 - deplacementCalculer : Il y a un problème dans le déplacement \n");
+                        printf("l 351 - deplacementCalculer : Il y a un problème dans le déplacement \n");
                         exit(EXIT_FAILURE);
                     }
             }
@@ -458,12 +458,16 @@ noeud* copy_noeud(noeud *src,char* chem,noeud* pere) {
 // Fonction auxiliaire pour faire un deplacement avec la creation pour la copie
 void cpVerif2(noeud* copie,noeud* courant,char* chem){
     w_index* cheminParcour=cons_index(chem);
-    if(DEBUG)printf("cpVerif2 nombre d'indew à copier : %d\n",cheminParcour->nbr);
+    if(DEBUGCPV){
+        printf("cpVerif2 nombre d'indew à copier : %d\n",cheminParcour->nbr);
+        print_index(cheminParcour);
+    }
     //! Soit on va directement faire la copie, soit on va faire le depalcement puis la copie
     if(cheminParcour->nbr==1){
         liste_noeud* li = courant->fils;
         // Si la ou on est n'a pas de fils
         if(li==NULL){
+            copie->pere=courant;
             ajoutL(courant,copie);
             return ;
         }
@@ -478,13 +482,14 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
         }
         noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
         if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
-            
+        save->pere = courant;
         ajoutL(courant,save);
         free_index(cheminParcour);
     }
     else{
         //Faire le deplacement vers l'avant dernier élément
         noeud* creation = deplacementAuxiliaireCp2(courant,chem);
+
         if(DEBUG)printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
         assert(creation != NULL);
 
@@ -495,6 +500,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
             noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
             if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
             
+            save->pere = creation;
             ajoutL(creation,save);
             free_index(cheminParcour);   
         }

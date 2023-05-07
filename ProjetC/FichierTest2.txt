@@ -5,14 +5,18 @@ ls
 print
 mkdir ProjetC
 mkdir Anglais
-racine
 print
+ls
+cd
 cp Cours /Td
+print
 rm /Td/ProjetC
 rm /Td/Anglais
 cd Td
 mkdir td1
 mkdir td2
 cp /Cours/ProjetC CopieProjet
-racine
+print
+cd
+mv Cours /Td/Cours
 print

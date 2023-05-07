@@ -300,14 +300,14 @@ void rm(noeud* n,char* chem){
 void cp(noeud* n,char* chem1,char* chem2){
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
     if(verif(chem1)==true){
-        if(DEBUG)printf("\033[34ml 335 - cp : Le chemin que l'on a donné est correct \033[0m \n");
+        if(DEBUG)printf("\033[34ml 303 - cp : Le chemin que l'on a donné est correct \033[0m \n");
         noeud* dep = cpVerif1(n,chem1);
         assert(dep!=NULL);
         if(DEBUG)printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
         cpVerif2(dep,n,chem2);
     }
     else{
-        if(DEBUG)printf("\033[31m l 343 : Erreur de chemin dans cp \033[0m\n");
+        if(DEBUG)printf("\033[31m l 310 : Erreur de chemin dans cp \033[0m\n");
         exit(1);
     }
 }
