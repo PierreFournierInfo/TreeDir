@@ -2,7 +2,7 @@ mkdir Cours
 cd Cours
 mkdir ProjetC
 mkdir Anglais
-racine
+cd
 touch edt
 print
 cp Cours /Td
@@ -12,6 +12,6 @@ cd Td
 mkdir td1
 mkdir td2
 cp /Cours/ProjetC CopieProjet
-racine
+cd
 ls
 print

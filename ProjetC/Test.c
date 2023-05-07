@@ -46,7 +46,12 @@ void lire_fichier(char* nom_fichier){
         } else if (strcmp(remove_newline(mot1), "rm") == 0) {
             rm(courant,remove_newline(mot2));
         } else if (strcmp(remove_newline(mot1), "cd") == 0) {
-            courant = cd(courant,remove_newline(mot2));
+            if(mot2==null){
+                courant=cd(courant,"");    
+            }
+            else{
+                courant = cd(courant,remove_newline(mot2));
+            }
         } else if (strcmp(remove_newline(mot1), "print") == 0) {
             print(courant);
         } else if (strcmp(remove_newline(mot1), "racine") == 0) {
