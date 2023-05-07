@@ -1,0 +1,9 @@
+mkdir orange
+ls
+cd orange
+ls
+mkdir banane
+ls
+cd banane
+ls
+cd

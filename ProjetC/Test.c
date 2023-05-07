@@ -46,12 +46,14 @@ void lire_fichier(char* nom_fichier){
         } else if (strcmp(remove_newline(mot1), "rm") == 0) {
             rm(courant,remove_newline(mot2));
         } else if (strcmp(remove_newline(mot1), "cd") == 0) {
-            courant = cd(courant,remove_newline(mot2));
+            if(strcmp(remove_newline(mot2), "") == 0){
+                courant=cd(courant,"");
+            }else{
+                courant = cd(courant,remove_newline(mot2));
+            }
         } else if (strcmp(remove_newline(mot1), "print") == 0) {
             print(courant);
-        } else if (strcmp(remove_newline(mot1), "racine") == 0) {
-            courant=cd(courant,"");
-        } else if (strcmp(remove_newline(mot1), "cp") == 0) {
+        }  else if (strcmp(remove_newline(mot1), "cp") == 0) {
             printf("cp %s",mot2);
             char* mot3 = strtok(NULL,"\n");
             printf(" arg2 : %s\n",mot3);
