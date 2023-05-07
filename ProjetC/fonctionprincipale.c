@@ -280,9 +280,9 @@ void rm(noeud* n,char* chem){
         //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
         if(verification_PresenceFils(n,dep->fils)==0 && dep != n){
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
-            if(DEBUG) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
-            //suppression(dep->pere,dep);
-            free(dep);
+            if(DEBUGRM) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
+            suppression(dep->pere,dep);
+            //free(dep);
         }
         else{
             printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
