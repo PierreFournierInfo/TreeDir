@@ -55,9 +55,6 @@ void lire_fichier(char* nom_fichier){
         } else if (strcmp(remove_newline(mot1), "print") == 0) {
             print(courant);
         } 
-        //else if (strcmp(remove_newline(mot1), "racine") == 0) {
-        //    courant=cd(courant,"");
-        //} 
         else if (strcmp(remove_newline(mot1), "cp") == 0) {
             printf("cp %s",mot2);
             char* mot3 = strtok(NULL,"\n");
@@ -73,15 +70,13 @@ void lire_fichier(char* nom_fichier){
             printf("La fonction '%s' n'existe pas\n", mot1);
         }
     }
+
     fclose(fichier);
 }
 
 int main(int argC,char* chaine[]){
     courant=creationDebut();
     lire_fichier(chaine[1]);
-    
-    //w_index* a = cons_index("Creation/omt/n");
-    //free_index(a);
 
     return 0;
 }

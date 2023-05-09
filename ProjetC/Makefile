@@ -16,4 +16,4 @@ $(PROG): $(OBJ_FILES)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -rf $(PROGR) $(OBJ_FILES) 
+	rm -rf $(PROG) $(OBJ_FILES) 
