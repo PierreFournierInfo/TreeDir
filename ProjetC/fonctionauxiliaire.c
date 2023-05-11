@@ -209,30 +209,35 @@ int nbFils(noeud* n){
 
 //Fonction auxliaire pour voir si un fils est situé dans ce chemin
 bool verification_PresenceFils(noeud* n, liste_noeud* list){
+    if(DEBUGVR) printf(" VERIF \n ");
     assert(n!=NULL);
     if(list==NULL || !validiteNoeud(n)){
         return false;
     }
 
     bool res=false;
+    if(DEBUGVR) printf("nom courant : %s     nom à verifier %s  \n",n->nom,list->no->nom);
     liste_noeud* parc=list;
     while(parc->succ != NULL){
         if(validiteNoeud(parc->no)){
+            if(DEBUGVR) printf(" %s , %s \n", n->nom ,parc->no->nom);
+            
             if(strcmp(parc->no->nom,n->nom)==0){
-            if(DEBUG)printf(" VerificationPresenceFils : Verification par le fils présent directement \n");
-            if(DEBUG)printf("%s , %s \n", parc->no->nom, n->nom);
-            return true;
+                if(DEBUGVR) printf(" VerificationPresenceFils : Verification par le fils présent directement \n");
+                return true;
             }
             if(parc->no->est_dossier){
                 if(parc->no->fils!=NULL){
                     // Verifier les sous dossiers ...
-                    res=verification_PresenceFils(n,parc->no->fils);
+                    if(DEBUGVR) printf(" SOUS DOS VERIF \n ");
+                    res = verification_PresenceFils(n,parc->no->fils);
                     if(res==true){
-                        if(DEBUG)printf(" verificationPresenceFils : Vérification par les fils des élements dans la liste \n");
+                        if(DEBUGVR) printf(" verificationPresenceFils : Vérification par les fils des élements dans la liste \n");
                         return true;
                     }
                 }
             }
+            if(DEBUGRM && !res) printf("false");
             parc=parc->succ;
         }
         else{
@@ -240,9 +245,11 @@ bool verification_PresenceFils(noeud* n, liste_noeud* list){
             exit(EXIT_FAILURE);
         }
     }
-    if(!validiteNoeud(parc->no) && strcmp(parc->no->nom,n->nom)==0){
+    if(validiteNoeud(parc->no) && strcmp(parc->no->nom,n->nom)==0){
+         if(DEBUGVR) printf(" true fin  \n ");
         return true;
     }
+    if( DEBUGRM && !res) printf("false fin\n");
     return res;
 }
 
@@ -458,57 +465,65 @@ noeud* copy_noeud(noeud *src,char* chem,noeud* pere) {
 // Fonction auxiliaire pour faire un deplacement avec la creation pour la copie
 void cpVerif2(noeud* copie,noeud* courant,char* chem){
     w_index* cheminParcour=cons_index(chem);
-    if(DEBUGCPV){
-        printf("cpVerif2 nombre d'indew à copier : %d\n",cheminParcour->nbr);
-        print_index(cheminParcour);
-    }
-    //! Soit on va directement faire la copie, soit on va faire le depalcement puis la copie
-    if(cheminParcour->nbr==1){
-        liste_noeud* li = courant->fils;
-        // Si la ou on est n'a pas de fils
-        if(li==NULL){
-            copie->pere=courant;
-            ajoutL(courant,copie);
-            return ;
+        if(DEBUGCPV){
+            printf("cpVerif2 nombre d'indew à copier : %d\n",cheminParcour->nbr);
+            print_index(cheminParcour);
         }
         
-        // Vérifier que les fichiers n'ont pas les memes noms
-        while(li->succ != NULL){
-            if(strcmp(li->no->nom,courant->nom)==0){
-                printf(" On ne pas faire une copie d'un noeud déjà existant \n");
-                exit(EXIT_FAILURE);
+        //! Soit on va directement faire la copie, soit on va faire le depalcement puis la copie
+        if(cheminParcour->nbr==1){
+            liste_noeud* li = courant->fils;
+            // Si la ou on est n'a pas de fils
+            if(li==NULL){
+                copie->pere=courant;
+                ajoutL(courant,copie);
+                return ;
             }
-            li=li->succ;
-        }
-        noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
-        if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
-        save->pere = courant;
-        ajoutL(courant,save);
-        free_index(cheminParcour);
-    }
-    else{
-        //Faire le deplacement vers l'avant dernier élément
-        noeud* creation = deplacementAuxiliaireCp2(courant,chem);
-
-        if(DEBUG)printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
-        assert(creation != NULL);
-
-        if(creation->est_dossier==true && 
-           verification_PresenceFils(copie,creation->fils)==0 && 
-           verification_PresenceFils(creation,copie->fils)==0){
             
+            // Vérifier que les fichiers n'ont pas les memes noms
+            while(li->succ != NULL){
+                if(strcmp(li->no->nom,courant->nom)==0){
+                    printf(" On ne pas faire une copie d'un noeud déjà existant \n");
+                    exit(EXIT_FAILURE);
+                }
+                li=li->succ;
+            }
             noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
             if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
-            
-            save->pere = creation;
-            ajoutL(creation,save);
-            free_index(cheminParcour);   
+            save->pere = courant;
+            ajoutL(courant,save);
+            free_index(cheminParcour);
         }
         else{
-            printf(" l 794 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
-            free_index(cheminParcour);
-            exit(EXIT_FAILURE);
-        }    
-    }
+            //Faire le deplacement vers l'avant dernier élément
+            noeud* creation = deplacementAuxiliaireCp2(courant,chem);
+            if(!verification_PresenceFils(courant,creation->fils)){
+                if(DEBUG)printf("OK");
+            }
+            else{
+                 printf("\033[31m l 310 : Erreur de chemin dans cp (cpVerif2 -> else) \033[0m\n");
+                 exit(EXIT_FAILURE);
+            }
+
+            if(DEBUG)printf(" \033[35m nom : %s \033[0m \nn", creation->nom);
+            assert(creation != NULL);
+
+            if(creation->est_dossier==true && 
+            verification_PresenceFils(copie,creation->fils)==0 && 
+            verification_PresenceFils(creation,copie->fils)==0){
+                
+                noeud* save=copy_noeud(copie,cheminParcour->words[cheminParcour->nbr-1],NULL);
+                if(DEBUG)printf(" NOM de la copie : %s \n", save->nom);
+                
+                save->pere = creation;
+                ajoutL(creation,save);
+                free_index(cheminParcour);   
+            }
+            else{
+                printf(" l 794 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
+                free_index(cheminParcour);
+                exit(EXIT_FAILURE);
+            }    
+        }
 }
 

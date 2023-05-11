@@ -53,7 +53,8 @@ void lire_fichier(char* nom_fichier){
                 courant = cd(courant,remove_newline(mot2));
             }
         } else if (strcmp(remove_newline(mot1), "print") == 0) {
-            print(courant);
+            noeud* deb=courant->racine;
+            print(deb);
         } 
         else if (strcmp(remove_newline(mot1), "cp") == 0) {
             printf("cp %s",mot2);

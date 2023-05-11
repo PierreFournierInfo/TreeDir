@@ -74,6 +74,7 @@ void pwd(noeud* n){ // Probleme de sens inverse à régler
         exit(EXIT_FAILURE);
     }
    if(strcmp(n->racine->nom,n->nom)==0){
+    printf("/%s", n->nom);
     return ;
    }
     pwd(n->pere); // Appel récursif pour le noeud père
@@ -200,10 +201,10 @@ void print(noeud* n){
     }
     noeud* parc=n;
     assert(parc!=NULL);
-    liste_noeud* save = n->fils;
+    liste_noeud* save = parc->fils;
     
-    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"") !=0
-       && save->no->pere != NULL && save->no->racine != NULL){
+    if(save!=NULL && save->no != NULL && strcmp(save->no->nom,"")!=0){
+       //&& save->no->pere != NULL && save->no->racine != NULL){
         if(strcmp(parc->nom,parc->pere->nom)==0){
             printf("Noeud %s , %d fils: ",parc->nom,nbFils(parc));
             liste_noeud* pFils=parc->fils;
@@ -277,15 +278,15 @@ void rm(noeud* n,char* chem){
         noeud* dep=depCD(n,chem);
         assert(dep!=NULL);
         
-        //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin
-        if(verification_PresenceFils(n,dep->fils)==0 && dep != n){
+        //On va maintenant vérifier si le noeud courant n'est pas dans ce chemin 
+        if(!verification_PresenceFils(n,dep->fils) && dep!=n){ //&& verification_PresenceFils(dep,n->fils)==0 && dep != n){
             // On pourra alors libérer la profondeur si on n'est pas situé sur le noeud courant
-            if(DEBUGRM) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom,dep->nom);
+            if(DEBUGRM) printf("rm : pere:%s  , noeud à supprimer %s \n",dep->pere->nom , dep->nom);
             suppression(dep->pere,dep);
-            //free(dep);
         }
         else{
             printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
+            //printf("\n \033[31ml 290 -  \033[0m\n");
             free(dep);
             exit(EXIT_FAILURE);
         }
@@ -301,14 +302,22 @@ void cp(noeud* n,char* chem1,char* chem2){
     //Faire les vérifications nécessaire pour éviter de copier dans le noeud ou on est situé
     if(verif(chem1)==true){
         if(DEBUG)printf("\033[34ml 303 - cp : Le chemin que l'on a donné est correct \033[0m \n");
-        noeud* dep = cpVerif1(n,chem1);
+        noeud* dep = cpVerif1(n,chem1); // copie à faire 
         assert(dep!=NULL);
         if(DEBUG)printf(" Voici le nom de la copie à faire : %s \n",dep->nom );
-        cpVerif2(dep,n,chem2);
+        
+        if(!verification_PresenceFils(n,dep->fils)) { 
+            if(DEBUG) printf("CP\n");
+            cpVerif2(dep,n,chem2);
+        }
+        else{
+            printf("\033[31m l 310 : Erreur de chemin dans cp \033[0m\n");
+            exit(EXIT_FAILURE);
+        }
     }
     else{
-        if(DEBUG)printf("\033[31m l 310 : Erreur de chemin dans cp \033[0m\n");
-        exit(1);
+        printf("\033[31m l 310 : Erreur de chemin dans cp \033[0m\n");
+        exit(EXIT_FAILURE);
     }
 }
 
