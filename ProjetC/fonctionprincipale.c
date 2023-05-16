@@ -74,7 +74,7 @@ void pwd(noeud* n){ // Probleme de sens inverse à régler
         exit(EXIT_FAILURE);
     }
    if(strcmp(n->racine->nom,n->nom)==0){
-    printf("/%s", n->nom);
+    printf("%s", n->nom);
     return ;
    }
     pwd(n->pere); // Appel récursif pour le noeud père
@@ -270,7 +270,7 @@ void print(noeud* n){
 void rm(noeud* n,char* chem){
     
     if((strlen(chem)==2 && strcmp(chem,"..")==0) || strcmp(chem,"")==0){
-        printf("\n\033[31ml 274 - rm: Le chemin que l'on a donné n'est pas correct \n\033[0m ");
+        printf("\n \033[31ml 274 - rm: Le chemin que l'on a donné n'est pas correct \n\033[0m ");
         exit(EXIT_FAILURE);
     }
     if(verif(chem)){
