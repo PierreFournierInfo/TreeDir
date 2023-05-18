@@ -69,6 +69,7 @@ void lire_fichier(char* nom_fichier){
         }
         else {
             printf("La fonction '%s' n'existe pas\n", mot1);
+            exit(EXIT_FAILURE);
         }
     }
 
