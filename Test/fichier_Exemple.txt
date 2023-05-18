@@ -11,7 +11,9 @@ rm /Td/Anglais
 cd Td
 mkdir td1
 mkdir td2
-cp /Cours/ProjetC CopieProjet
 cd
+cp Cours /Td/CoursBis
+cd Td
+cp /Cours /Td/Test
 ls
 print

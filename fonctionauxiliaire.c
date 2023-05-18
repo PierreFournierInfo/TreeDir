@@ -176,7 +176,7 @@ noeud* depCD(noeud* n, char* name){
                         list=tmp->fils;
                     }
                     else{
-                        printf("\033[31mdepCd 199: Il y a un problème dans le déplacement %s , %s \033[0m\n",list->no->nom, chem->words[i]);
+                        printf("\033[31mdepCd 179: Il y a un problème dans le déplacement %s , %s \033[0m\n",list->no->nom, chem->words[i]);
                         exit(EXIT_FAILURE);
                     }
                 }
@@ -185,7 +185,7 @@ noeud* depCD(noeud* n, char* name){
             free_index(chem);
             assert(tmp!=NULL);
             if(!validiteNoeud(tmp)){
-                printf("\033[31m(else depCD 208 ) Il y a un problème dans la liaison des noeuds \033[0m\n");
+                printf("\033[31m(else depCD 188 ) Il y a un problème dans la liaison des noeuds \033[0m\n");
                 exit(EXIT_FAILURE);
             }
             //printf("\033[34mcd : %s (Réussi) \033[0m\n", tmp->nom);
@@ -324,7 +324,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
     assert(n!=NULL);
     assert(chem!=NULL);
     if(verif(chem)==false || strcmp(chem,"")==0 || strcmp(chem,"..")==0){
-        printf("l 320 - deplacementCalculer : le chemin est faux \n");
+        printf("l 327 - deplacementCalculer : le chemin est faux \n");
         exit(EXIT_FAILURE);
     }
     if(*chem =='/'){
@@ -355,7 +355,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
                         }
                     }
                     else{
-                        printf("l 351 - deplacementCalculer : Il y a un problème dans le déplacement \n");
+                        printf("l 358 - deplacementAuxiliaire2 : Il y a un problème dans le déplacement \n");
                         exit(EXIT_FAILURE);
                     }
             }
@@ -394,7 +394,7 @@ noeud* deplacementAuxiliaireCp2(noeud* n,char* chem){
                         }
                     }
                     else{
-                        printf("deplacementCalculer : Il y a un problème dans le déplacement \n");
+                        printf("l 397 : deplacementAuxiliaire2 : Il y a un problème dans le déplacement \n");
                         exit(EXIT_FAILURE);
                     }
             }
@@ -511,7 +511,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
                 if(DEBUG)printf("OK");
             }
             else{
-                 printf("\033[31m l 310 : Erreur de chemin dans cp (cpVerif2 -> else) \033[0m\n");
+                 printf("\033[31m l 514 : Erreur de chemin dans cp (cpVerif2 -> else) \033[0m\n");
                  exit(EXIT_FAILURE);
             }
 
@@ -530,7 +530,7 @@ void cpVerif2(noeud* copie,noeud* courant,char* chem){
                 free_index(cheminParcour);   
             }
             else{
-                printf(" l 794 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
+                printf(" l 533 - cpVerif2 : On ne peut pas faire une copie dans un fichier \n");
                 free_index(cheminParcour);
                 exit(EXIT_FAILURE);
             }    

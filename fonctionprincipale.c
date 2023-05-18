@@ -285,14 +285,14 @@ void rm(noeud* n,char* chem){
             suppression(dep->pere,dep);
         }
         else{
-            printf("\n \033[31ml 289 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
+            printf("\n \033[31ml 288 - rm: Ce chemin est sur le noeud courant on ne peut pas le supprimer \033[0m\n");
             //printf("\n \033[31ml 290 -  \033[0m\n");
             free(dep);
             exit(EXIT_FAILURE);
         }
     }
     else{
-        printf(" \n\033[31ml 294 - rm: Ce chemin est incorrect \033[0m \n");
+        printf(" \n\033[31ml 295 - rm: Ce chemin est incorrect \033[0m \n");
         exit(EXIT_FAILURE);
     }
 }
