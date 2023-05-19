@@ -13,7 +13,7 @@ rm /DossierCop/CopCreation/Dossier1
 rm DossierCop/CopCreation/Anglais
 ls
 cd DossierCop
-mv /Creation CopCreation
+mv /Creation Mouvement
 ls
 cd
 ls
