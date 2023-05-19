@@ -1,0 +1,20 @@
+mkdir Creation
+ls
+cd Creation
+ls
+mkdir Dossier1
+mkdir Anglais
+print
+ls
+cd
+mkdir DossierCop
+cp Creation DossierCop/CopCreation
+rm /DossierCop/CopCreation/Dossier1
+rm DossierCop/CopCreation/Anglais
+ls
+cd DossierCop
+mv /Creation CopCreation
+ls
+cd
+ls
+print
