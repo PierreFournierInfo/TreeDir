@@ -48,7 +48,11 @@ noeud* ajoutL(noeud* courant, noeud* n){
         if(DEBUG)printf("\033[33mAjout Liste \033[0m\n");
         if(courant->fils->succ==NULL){
             // Si le suivant est directement NULL
-            liste_noeud* aj=malloc(sizeof(liste_noeud));
+            if(strcmp(courant->fils->no->nom,n->nom)==0){
+                printf("Le nom %s est déjà présent !!\n",n->nom);
+                exit(EXIT_FAILURE);
+            }
+            liste_noeud* aj = malloc(sizeof(liste_noeud)); 
             assert(aj!=NULL);
             aj->no=n;
             aj->succ=NULL;
@@ -59,6 +63,10 @@ noeud* ajoutL(noeud* courant, noeud* n){
             // Si on doit faire un parcour des fils
             liste_noeud* tmp = courant->fils;
             while(tmp->succ != NULL){
+                if(strcmp(tmp->no->nom,n->nom)==0){
+                    printf("Le nom %s est déjà présent !!\n",n->nom);
+                    exit(EXIT_FAILURE);
+                }
                 tmp=tmp->succ;
             }
             liste_noeud* aj=malloc(sizeof(liste_noeud));
