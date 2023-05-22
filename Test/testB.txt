@@ -1,0 +1,21 @@
+mkdir Aliments
+touch listeAliments
+ls
+cd Aliments
+mkdir Fruits
+mkdir Feculents
+mkdir Viande
+touch listeFruits
+touch listeViandes
+touch listeFeculents
+ls
+cd Fruits
+pwd
+mkdir Banane
+touch varieteBananes
+cd /Aliments/Feculents
+pwd
+mkdir Riz
+ls
+pwd
+print
